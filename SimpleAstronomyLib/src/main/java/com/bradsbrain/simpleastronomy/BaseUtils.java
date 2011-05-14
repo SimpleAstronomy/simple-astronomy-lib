@@ -72,10 +72,12 @@ public final class BaseUtils {
      * Useful date-to-string formatting which I found myself using a lot
      *
      * @param moonDate
+     * @param tz the timezone with which to format the date
      * @return the date in whatever timezone is default
      */
-    public static String formatDateAsShortDateLocalTime(Date moonDate) {
+    public static String formatDateAsShortDateLocalTime(Date moonDate, TimeZone tz) {
         DateFormat sdf = SimpleDateFormat.getDateInstance(SHORT);
+        sdf.setTimeZone(tz);
         ((SimpleDateFormat) sdf).applyPattern("yyyy-MM-dd");
         return sdf.format(moonDate);
     }
