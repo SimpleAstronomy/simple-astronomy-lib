@@ -26,7 +26,13 @@ import static java.text.DateFormat.SHORT;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-
+/**
+ * This is close to the end result of what we're looking for in our library:
+ * Given a date/calendar, find the new moon or full moon following that date.
+ * 
+ * Expected output values can be found here: http://eclipse.gsfc.nasa.gov/phase/phase2001gmt.html
+ * 
+ */
 public class EndGameMoonTest {
 
     @Test
@@ -52,7 +58,7 @@ public class EndGameMoonTest {
 
         Date newMoonDate = MoonPhaseFinder.findNewMoonFollowing(cal);
         assertThat(newMoonDate, is(not(nullValue())));
-        assertThat(formatDateAsShortDateLocalTime(newMoonDate), equalTo("2010-11-06"));
+        assertThat(formatDateAsShortDateLocalTime(newMoonDate, TimeZone.getTimeZone("America/Chicago")), equalTo("2010-11-06"));
     }
 
     @Test
@@ -63,7 +69,7 @@ public class EndGameMoonTest {
 
         Date fullMoonDate = MoonPhaseFinder.findFullMoonFollowing(cal);
         assertThat(fullMoonDate, is(not(nullValue())));
-        assertThat(formatDateAsShortDateLocalTime(fullMoonDate), equalTo("2010-10-22"));
+        assertThat(formatDateAsShortDateLocalTime(fullMoonDate, TimeZone.getTimeZone("America/Chicago")), equalTo("2010-10-22"));
 
         cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         cal.clear();
@@ -73,7 +79,7 @@ public class EndGameMoonTest {
         fullMoonDate = MoonPhaseFinder.findFullMoonFollowing(cal);
         System.out.println("Date of full moon: " + formatDateAsReallyLongString(fullMoonDate));
         assertThat(fullMoonDate, is(not(nullValue())));
-        assertThat(formatDateAsShortDateLocalTime(fullMoonDate), equalTo("2010-10-22"));
+        assertThat(formatDateAsShortDateLocalTime(fullMoonDate, TimeZone.getTimeZone("America/Chicago")), equalTo("2010-10-22"));
 
     }
 
