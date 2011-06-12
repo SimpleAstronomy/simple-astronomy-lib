@@ -40,4 +40,4 @@ The output from the above example says the next full moon after June 12, 2011 wi
 
 = A Note on Accuracy =
 
-Currently, the accuracy is within 15 minutes when compared to a page at [http://eclipse.gsfc.nasa.gov/phase/phase2001gmt.html moon phases at NASA] so it's not too far off.  Originally I was looking for accuracy within 6 hours, but will be attempting to improve this. The source I used for calculations isn't the cause since the book I use has more accurate examples. Thus, I'm sure it's due to my implementation.
+Currently, the accuracy is within 15 minutes when compared to a page of [http://eclipse.gsfc.nasa.gov/phase/phase2001gmt.html moon phases at NASA] so it's not too far off.  Originally I was looking for accuracy within 6 hours, but will be attempting to improve this. The source I used for calculations isn't the cause since the book I use has more accurate examples. Thus, I'm sure it's due to my implementation.
