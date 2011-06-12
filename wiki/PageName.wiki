@@ -1,0 +1,28 @@
+#summary Getting Started - Example Usage
+#labels Featured,Phase-Implementation
+
+= Introduction =
+
+Here is an example usage to help you get started.
+
+= Details =
+
+  # Download the latest Simple Astronomy Lib jar file from the [http://code.google.com/p/simple-astronomy-lib/downloads/list Downloads page].
+  # Create a file `WerewolfCheck.java` with the following contents:
+{{{
+import java.util.Calendar;
+import java.util.TimeZone;
+import com.bradsbrain.simpleastronomy.MoonPhaseFinder;
+
+public class WerewolfCheck {
+    public static void main(String[] args) {
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("America/Chicago"));
+        cal.clear();
+        cal.set(2011, Calendar.JUNE, 12);
+
+        System.out.println("The next full moon is on: " + MoonPhaseFinder.findFullMoonFollowing(cal));
+    }
+}
+}}}
+
+# Download the 
