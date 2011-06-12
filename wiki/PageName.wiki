@@ -7,6 +7,14 @@ Here is an example usage to help you get started.
 
 = Details =
 
+The basic usage of the Simple Astronomy Lib goes like this:
+{{{
+   MoonPhaseFinder.findFullMoonFollowing(cal)
+}}}
+Most methods in the API will return a `java.util.Date`
+
+= Example =
+
   # Download the latest Simple Astronomy Lib jar file from the [http://code.google.com/p/simple-astronomy-lib/downloads/list Downloads page].
   # Create a file `WerewolfCheck.java` with the following contents:
 {{{
@@ -24,5 +32,16 @@ public class WerewolfCheck {
     }
 }
 }}}
+  # Compile the code
+{{{
+    javac -cp SimpleAstronomyLib-0.1.0.jar WerewolfCheck.java 
+}}} 
+  # Run the example
+{{{
+    java -cp .:SimpleAstronomyLib-0.1.0.jar WerewolfCheck 
+}}}  
+The output from the above example says the next full moon after June 12, 2011 will be June 15 at 15:25 CDT. 
 
-# Download the 
+= A Note on Accuracy =
+
+Currently, the accuracy is within 15 minutes when compared to a page at [http://eclipse.gsfc.nasa.gov/phase/phase2001gmt.html moon phases at NASA] so it's not too far off.  Originally I was looking for accuracy within 6 hours, but will be attempting to improve this. The source I used for calculations isn't the cause since the book I use has more accurate examples. Thus, I'm sure it's due to my implementation.
