@@ -1,10 +1,6 @@
 #summary Getting Started - Example Usage
 #labels Featured,Phase-Implementation
 
-= Introduction =
-
-Here is an example usage to help you get started.
-
 = Details =
 
 The basic usage of the Simple Astronomy Lib goes like this:
