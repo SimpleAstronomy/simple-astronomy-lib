@@ -11,7 +11,8 @@ NOTE: additional collaborators welcome
 * Moon Phase - find date for next phase of the moon (full or new)
 
 ### Getting Started / Example
-For a brief page on how to use this library, read the [http://code.google.com/p/simple-astronomy-lib/wiki/GettingStartedExample Getting Started page].
+For a brief page on how to use this library, read the [Getting Started page](http://code.google.com/p/simple-astronomy-lib/wiki/GettingStartedExample )
+(currently hosted on code.google.com)
 
 ### Project Goals
   * Minimize number of dependencies (useful for mobile device usage)
