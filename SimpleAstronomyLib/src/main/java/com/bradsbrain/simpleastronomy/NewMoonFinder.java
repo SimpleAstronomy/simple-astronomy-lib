@@ -15,10 +15,16 @@
  */
 package com.bradsbrain.simpleastronomy;
 
-public abstract class MoonChecker {
+public class NewMoonFinder implements MoonFinder {
 
-    public abstract boolean isCorrectAngle(double d);
+	private static final int _360 = 360;
+	
+	private static final double _180 = 180.0;
 
-    public abstract boolean isCorrectPercent(double d);
+	public boolean isMoonBefore(double angle, double unused) {
+		double usefulAngle = (angle + _180) % _360;
+
+		return 180 <= usefulAngle;
+	}
 
 }
