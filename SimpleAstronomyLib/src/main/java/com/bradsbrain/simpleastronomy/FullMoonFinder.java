@@ -15,26 +15,15 @@
  */
 package com.bradsbrain.simpleastronomy;
 
+public class FullMoonFinder implements MoonFinder {
 
-public class NewMoonChecker extends MoonChecker {
+	private static final int _360 = 360;
+	
+	private static final double _180 = 180.0;
 
-    private static final double VERY_SMALL_ANGLE = 0.01;
-    private static final double VERY_SMALL_PERCENT = 0.01;
-
-    /**
-     * A new moon would be at a very small angle
-     */
-    @Override
-    public boolean isCorrectAngle(double d) {
-        return d < VERY_SMALL_ANGLE;
-    }
-
-    /**
-     * A new moon would be at a very small percent visible
-     */
-    @Override
-    public boolean isCorrectPercent(double d) {
-        return d < VERY_SMALL_PERCENT;
-    }
-
+	public boolean isMoonBefore(double angle, double unused) {
+		double usefulAngle = (angle + _180) % _360;
+		
+		return 180.0 > usefulAngle;
+	}
 }

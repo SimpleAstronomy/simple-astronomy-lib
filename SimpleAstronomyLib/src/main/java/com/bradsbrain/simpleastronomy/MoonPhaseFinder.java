@@ -20,10 +20,11 @@ import java.util.Date;
 
 public class MoonPhaseFinder {
 
-    private static final int NUM_STEP_MINUTES = 1;
-
-    private static MoonChecker newMoonChecker = new NewMoonChecker();
-    private static MoonChecker fullMoonChecker = new FullMoonChecker();
+	private static final int _31_DAYS_AS_MINUTES = 31 * 24 * 60;
+	
+    private static MoonFinder newMoonFinder = new NewMoonFinder();
+    
+    private static MoonFinder fullMoonFinder = new FullMoonFinder();
 
     public enum MoonPhase {
         NEW,
@@ -39,7 +40,6 @@ public class MoonPhaseFinder {
         static MoonPhase finder(double percent) {
             return FULL;
         }
-
     }
 
     /**
@@ -53,49 +53,53 @@ public class MoonPhaseFinder {
     }
 
     public static Date findFullMoonFollowing(Calendar cal) {
-        return findDatePassingBounds(cal, fullMoonChecker);
+        return findDatePassingBounds(cal, 0, _31_DAYS_AS_MINUTES, fullMoonFinder);
     }
 
     public static Date findNewMoonFollowing(Calendar cal) {
-        return findDatePassingBounds(cal, newMoonChecker);
+        return findDatePassingBounds(cal, 0, _31_DAYS_AS_MINUTES, newMoonFinder);
     }
 
     public static Date findFullMoonFollowing(Date date) {
         long time = date.getTime();
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(time);
-        return findDatePassingBounds(cal, fullMoonChecker);
+        return findDatePassingBounds(cal, 0, _31_DAYS_AS_MINUTES, fullMoonFinder);
     }
 
     public static Date findNewMoonFollowing(Date date) {
         long time = date.getTime();
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(time);
-        return findDatePassingBounds(cal, newMoonChecker);
+        return findDatePassingBounds(cal, 0, _31_DAYS_AS_MINUTES, newMoonFinder);
     }
 
     /**
-     * TODO: This loop isn't very efficient, come up with a better implementation
+     * Finds a type of moon after the given calendar.  Uses a binary search.  Recursive.
      *
      * @param cal         the calendar date for which to compute the moon position
      * @param moonChecker the NewMoon or FullMoon checker
      * @return the forward date which passes the given bounds provided
      */
-    private static Date findDatePassingBounds(Calendar cal, MoonChecker moonChecker) {
-        Calendar myCal = BaseUtils.getSafeLocalCopy(cal.getTimeInMillis());
-        Calendar thirtyOneDaysLater = Calendar.getInstance();
-        thirtyOneDaysLater.setTimeInMillis(myCal.getTimeInMillis());
-        thirtyOneDaysLater.add(Calendar.DAY_OF_MONTH, 31);
-        // if we don't find a new moon after 31 days we're not going to find it. days between phases is ~29.5
-        while (myCal.before(thirtyOneDaysLater)) {
-            myCal.add(Calendar.MINUTE, NUM_STEP_MINUTES);
-            double percent = 100 * MoonPhaseFinder.getMoonVisiblePercent(myCal);
-            double angle = MoonPhaseFinder.getMoonAngle(myCal);
-            if (moonChecker.isCorrectAngle(angle) && moonChecker.isCorrectPercent(percent)) {
-                return myCal.getTime();
-            }
-        }
-        return null;
+    private static Date findDatePassingBounds(Calendar cal, int startMinutes, int endMinutes, MoonFinder moonFinder) {
+    	if (1 >= (endMinutes - startMinutes)) {
+    		Calendar myCal = BaseUtils.getSafeLocalCopy(cal.getTimeInMillis());
+    		myCal.add(Calendar.MINUTE, endMinutes);
+    		return myCal.getTime();
+    	}
+    	
+    	int middleMinutes = startMinutes + ((endMinutes - startMinutes) / 2);
+    	Calendar middleCal = BaseUtils.getSafeLocalCopy(cal.getTimeInMillis());
+    	middleCal.add(Calendar.MINUTE, middleMinutes);
+    	
+    	double percent = 100 * MoonPhaseFinder.getMoonVisiblePercent(middleCal);
+        double angle = MoonPhaseFinder.getMoonAngle(middleCal);
+    	
+    	if (moonFinder.isMoonBefore(angle, percent)) {
+    		return findDatePassingBounds(cal, startMinutes, middleMinutes, moonFinder);
+    	} else {
+    		return findDatePassingBounds(cal, middleMinutes, endMinutes, moonFinder);
+    	}
     }
 
     /**
@@ -129,5 +133,5 @@ public class MoonPhaseFinder {
         }
         return angleAge;
     }
-
+    
 }

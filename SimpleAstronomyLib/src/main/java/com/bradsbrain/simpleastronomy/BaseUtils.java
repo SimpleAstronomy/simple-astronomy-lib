@@ -28,6 +28,9 @@ public final class BaseUtils {
         return JulianDate.makeJulianDateUsingMyModified(myCal) - epoch;
     }
 
+    
+    
+    
     public static Calendar getSafeLocalCopy(long millis) {
         // safe local copy
         Calendar myCal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
