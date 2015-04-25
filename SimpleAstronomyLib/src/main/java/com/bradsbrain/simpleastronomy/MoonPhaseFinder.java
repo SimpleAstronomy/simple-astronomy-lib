@@ -22,9 +22,9 @@ public class MoonPhaseFinder {
 
 	private static final int _31_DAYS_AS_MINUTES = 31 * 24 * 60;
 	
-    private static MoonFinder newMoonFinder = new NewMoonFinder();
+    private static final MoonFinder newMoonFinder = new NewMoonFinder();
     
-    private static MoonFinder fullMoonFinder = new FullMoonFinder();
+    private static final MoonFinder fullMoonFinder = new FullMoonFinder();
 
     public enum MoonPhase {
         NEW,
@@ -53,25 +53,25 @@ public class MoonPhaseFinder {
     }
 
     public static Date findFullMoonFollowing(Calendar cal) {
-        return findDatePassingBounds(cal, 0, _31_DAYS_AS_MINUTES, fullMoonFinder);
+        return findDatePassingBounds(cal, fullMoonFinder);
     }
 
     public static Date findNewMoonFollowing(Calendar cal) {
-        return findDatePassingBounds(cal, 0, _31_DAYS_AS_MINUTES, newMoonFinder);
+        return findDatePassingBounds(cal, newMoonFinder);
     }
 
     public static Date findFullMoonFollowing(Date date) {
         long time = date.getTime();
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(time);
-        return findDatePassingBounds(cal, 0, _31_DAYS_AS_MINUTES, fullMoonFinder);
+        return findDatePassingBounds(cal, fullMoonFinder);
     }
 
     public static Date findNewMoonFollowing(Date date) {
         long time = date.getTime();
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(time);
-        return findDatePassingBounds(cal, 0, _31_DAYS_AS_MINUTES, newMoonFinder);
+        return findDatePassingBounds(cal, newMoonFinder);
     }
 
     /**
@@ -81,25 +81,26 @@ public class MoonPhaseFinder {
      * @param moonChecker the NewMoon or FullMoon checker
      * @return the forward date which passes the given bounds provided
      */
-    private static Date findDatePassingBounds(Calendar cal, int startMinutes, int endMinutes, MoonFinder moonFinder) {
-    	if (1 >= (endMinutes - startMinutes)) {
-    		Calendar myCal = BaseUtils.getSafeLocalCopy(cal.getTimeInMillis());
-    		myCal.add(Calendar.MINUTE, endMinutes);
-    		return myCal.getTime();
+    private static Date findDatePassingBounds(Calendar cal, MoonFinder moonFinder) {
+    	int startMinutes =  0, endMinutes = _31_DAYS_AS_MINUTES;
+    	while (1 < (endMinutes - startMinutes)) {
+    		int middleMinutes = startMinutes + ((endMinutes - startMinutes) / 2);
+    		Calendar middleCal = BaseUtils.getSafeLocalCopy(cal.getTimeInMillis());
+    		middleCal.add(Calendar.MINUTE, middleMinutes);
+    		
+    		double percent = 100 * MoonPhaseFinder.getMoonVisiblePercent(middleCal);
+    		double angle = MoonPhaseFinder.getMoonAngle(middleCal);
+    		
+    		if (moonFinder.isMoonBefore(angle, percent)) {
+    			endMinutes = middleMinutes;
+    		} else {
+    			startMinutes = middleMinutes;
+    		}
     	}
     	
-    	int middleMinutes = startMinutes + ((endMinutes - startMinutes) / 2);
-    	Calendar middleCal = BaseUtils.getSafeLocalCopy(cal.getTimeInMillis());
-    	middleCal.add(Calendar.MINUTE, middleMinutes);
-    	
-    	double percent = 100 * MoonPhaseFinder.getMoonVisiblePercent(middleCal);
-        double angle = MoonPhaseFinder.getMoonAngle(middleCal);
-    	
-    	if (moonFinder.isMoonBefore(angle, percent)) {
-    		return findDatePassingBounds(cal, startMinutes, middleMinutes, moonFinder);
-    	} else {
-    		return findDatePassingBounds(cal, middleMinutes, endMinutes, moonFinder);
-    	}
+    	Calendar myCal = BaseUtils.getSafeLocalCopy(cal.getTimeInMillis());
+    	myCal.add(Calendar.MINUTE, endMinutes);
+    	return myCal.getTime();
     }
 
     /**

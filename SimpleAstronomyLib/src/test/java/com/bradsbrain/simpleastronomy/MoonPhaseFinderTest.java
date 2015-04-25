@@ -33,13 +33,17 @@ import java.util.*;
  * This is close to the end result of what we're looking for in our library:
  * Given a date/calendar, find the new moon or full moon following that date.
  * 
- * Expected output values can be found here: http://eclipse.gsfc.nasa.gov/phase/phase2001gmt.html
+ * Expected output values can be found for Chicago tests at
+ * <a href="http://eclipse.gsfc.nasa.gov/phase/phase2001gmt.html">NASA.</a>.
  * 
+ * Expected output values cab be found for Melbourne tests at the
+ * <a href="http://museumvictoria.com.au/planetarium/discoverycentre/moon-phases/moon-phases-2015/">Melbourne Planetarium</a>.
  */
 public class MoonPhaseFinderTest {
 
 	private static final TimeZone chicagoTimeZone = TimeZone.getTimeZone("America/Chicago");
 	
+	private static final TimeZone melbourneTimeZone = TimeZone.getTimeZone("Australia/Melbourne");
 	
     @Test
     public void testFindMoonPhaseAt() {
@@ -140,8 +144,33 @@ public class MoonPhaseFinderTest {
 		final Date fullMoon = MoonPhaseFinder.findFullMoonFollowing(cal);
 		assertThat(formatter.format(fullMoon), is("Jun 15 15:25:00 CDT 2011"));
 	}
+	
+	@Test
+	public void mebourneFullMoonMay2015() {
+		DateFormat formatter = new SimpleDateFormat("MMM dd HH:mm:ss zzz yyyy");
+		formatter.setTimeZone(melbourneTimeZone);
+		
+		Calendar cal = Calendar.getInstance(melbourneTimeZone);
+		cal.clear();
+		cal.set(2015, Calendar.MAY, 1);
+		
+		final Date fullMoon = MoonPhaseFinder.findFullMoonFollowing(cal);
+		// TODO: increase accuracy to May 04 13:42:00
+		assertThat(formatter.format(fullMoon), is("May 04 13:49:00 EST 2015"));
+	}
 
-	// FIXME: Damon make a melbourne example
-	// http://museumvictoria.com.au/planetarium/discoverycentre/moon-phases/moon-phases-2015/
+	@Test
+	public void mebourneFullMoonDec2015() {
+		DateFormat formatter = new SimpleDateFormat("MMM dd HH:mm:ss zzz yyyy");
+		formatter.setTimeZone(melbourneTimeZone);
+		
+		Calendar cal = Calendar.getInstance(melbourneTimeZone);
+		cal.clear();
+		cal.set(2015, Calendar.NOVEMBER, 27);
+		
+		final Date fullMoon = MoonPhaseFinder.findFullMoonFollowing(cal);
+		// TODO: increase accuracey to Dec 25 22:11:00, note is daylight savings time
+		assertThat(formatter.format(fullMoon), is("Dec 25 22:17:00 EST 2015"));
+	}
 	
 }

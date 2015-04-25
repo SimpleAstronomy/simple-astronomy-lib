@@ -16,12 +16,12 @@
 package com.bradsbrain.simpleastronomy;
 
 /**
- * An interface for searching for Moons.
+ * An interface for searching for a moon phase for use in a binary search.
  */
 public interface MoonFinder {
 
 	/**
-	 * Determines if the moon is earlier or later than the given information.
+	 * Determines if the desired moon type is earlier or later than the given information.
 	 * 
 	 * @param angle a moon angle
 	 * @param percent a moon visible percentage
