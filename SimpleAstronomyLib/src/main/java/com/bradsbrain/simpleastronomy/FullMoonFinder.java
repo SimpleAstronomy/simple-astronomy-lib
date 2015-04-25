@@ -15,15 +15,21 @@
  */
 package com.bradsbrain.simpleastronomy;
 
+/**
+ * Provides a full moon finding calculation for use in a binary search.
+ */
 public class FullMoonFinder implements MoonFinder {
 
 	private static final int _360 = 360;
 	
-	private static final double _180 = 180.0;
+	private static final double ROTATE_ANGLE = 179.9;
 
+	private static final double FULL_MOON_HALF_ANGLE = _360/ 2;
+	
+	/** {@inheritDoc} */
 	public boolean isMoonBefore(double angle, double unused) {
-		double usefulAngle = (angle + _180) % _360;
+		double usefulAngle = (angle + ROTATE_ANGLE) % _360;
 		
-		return 180.0 > usefulAngle;
+		return FULL_MOON_HALF_ANGLE > usefulAngle;
 	}
 }
