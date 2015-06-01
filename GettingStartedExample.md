@@ -1,16 +1,16 @@
-# Details #
+#Details
 
 The basic usage of the Simple Astronomy Lib goes like this:
-```
+```java
    MoonPhaseFinder.findFullMoonFollowing(cal)
 ```
 Most methods in the API will return a `java.util.Date`
 
-# Example #
+#Example
 
-  1. Download the latest Simple Astronomy Lib jar file from the [Downloads page](http://code.google.com/p/simple-astronomy-lib/downloads/list).
-  1. Create a file `WerewolfCheck.java` with the following contents:
-```
+1. Download the latest Simple Astronomy Lib jar file from the [Downloads page](https://github.com/dustmachine/simple-astronomy-lib/releases).
+1. Create a file `WerewolfCheck.java` with the following contents:
+```java
 import java.util.Calendar;
 import java.util.TimeZone;
 import com.bradsbrain.simpleastronomy.MoonPhaseFinder;
@@ -25,11 +25,11 @@ public class WerewolfCheck {
     }
 }
 ```
-  1. Compile the code
+1. Compile the code
 ```
     javac -cp SimpleAstronomyLib-0.1.0.jar WerewolfCheck.java 
 ```
-  1. Run the example
+1. Run the example
 ```
     java -cp .:SimpleAstronomyLib-0.1.0.jar WerewolfCheck 
 ```
