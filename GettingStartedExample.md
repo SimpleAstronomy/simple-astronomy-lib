@@ -8,7 +8,7 @@ Most methods in the API will return a `java.util.Date`
 
 #Example
 
-1. Download the latest Simple Astronomy Lib jar file from the [Downloads page](https://github.com/dustmachine/simple-astronomy-lib/releases).
+1. Download the latest Simple Astronomy Lib jar file from the [Releases page](https://github.com/dustmachine/simple-astronomy-lib/releases).
 1. Create a file `WerewolfCheck.java` with the following contents:
 ```java
 import java.util.Calendar;
