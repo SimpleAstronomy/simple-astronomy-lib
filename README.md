@@ -11,8 +11,7 @@ NOTE: additional collaborators welcome
 * Moon Phase - find date for next phase of the moon (full or new)
 
 ### Getting Started / Example
-For a brief page on how to use this library, read the [Getting Started page](http://code.google.com/p/simple-astronomy-lib/wiki/GettingStartedExample )
-(currently hosted on code.google.com)
+For a brief page on how to use this library, read the [Getting Started page](https://github.com/dustmachine/simple-astronomy-lib/blob/wiki/GettingStartedExample.md)
 
 ### Project Goals
   * Minimize number of dependencies (useful for mobile device usage)
@@ -27,7 +26,7 @@ For a brief page on how to use this library, read the [Getting Started page](htt
   * Find location of sun or moon (right ascension, declination)
 
 ### Schedule
-  * move the "Getting Started" example to GitHub
+  * ~~move the "Getting Started" example to GitHub~~
   * ~~Initial code commit before April 1, 2011~~ DONE!
   * ~~Decent documentation on usage before June 30, 2011~~
   * Jenkins CI builds (Q2 2015)
