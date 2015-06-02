@@ -6,7 +6,7 @@
 
     <groupId>com.bradsbrain</groupId>
     <artifactId>SimpleAstronomyLib</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
 
     <dependencies>
         <dependency>
@@ -33,6 +33,33 @@
                     <target>1.5</target>
                 </configuration>
             </plugin>
+            <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+				<execution>
+					<id>attach-sources</id>
+					<goals>
+						<goal>jar</goal>
+					</goals>
+				</execution>
+				</executions>
+		    </plugin>
+		    <!-- FIXME: Damon, fix javadoc errors in the source. -->
+		    <!--
+		    <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<executions>
+					<execution>
+					<id>attach-javadocs</id>
+					<goals>
+						<goal>jar</goal>
+					</goals>
+					</execution>
+				</executions>
+		    </plugin>
+		    -->
         </plugins>
     </build>
 
