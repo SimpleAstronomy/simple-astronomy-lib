@@ -15,12 +15,12 @@
  */
 package com.bradsbrain.simpleastronomy;
 
-import junit.framework.TestCase;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.closeTo;
 import org.junit.Test;
 
-public class BaseUtilsTest extends TestCase {
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.closeTo;
+
+public class BaseUtilsTest {
 
     @Test
     public void testAdjustTo360Range() {
