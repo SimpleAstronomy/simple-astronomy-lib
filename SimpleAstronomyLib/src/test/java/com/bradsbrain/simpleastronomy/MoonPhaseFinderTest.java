@@ -15,19 +15,19 @@
  */
 package com.bradsbrain.simpleastronomy;
 
+import org.junit.Test;
+
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.bradsbrain.simpleastronomy.BaseUtils.formatDateAsShortDateLocalTime;
 import static com.bradsbrain.simpleastronomy.BaseUtils.formatDateForGMT;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-
-import org.junit.Test;
-
-import java.text.DateFormat;
-
-import static java.text.DateFormat.SHORT;
-
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  * This is close to the end result of what we're looking for in our library:
@@ -41,76 +41,58 @@ import java.util.*;
  */
 public class MoonPhaseFinderTest {
 
-	private static final TimeZone chicagoTimeZone = TimeZone.getTimeZone("America/Chicago");
-	
-	private static final TimeZone melbourneTimeZone = TimeZone.getTimeZone("Australia/Melbourne");
-	
+    private static final ZoneId chicagoTimeZone = ZoneId.of("America/Chicago");
+
+    private static final ZoneId melbourneTimeZone = ZoneId.of("Australia/Melbourne");
+
     @Test
     public void testFindMoonPhaseAt() {
-        Calendar cal = GregorianCalendar.getInstance(TimeZone.getTimeZone("GMT"));
-        cal.set(Calendar.YEAR, 1979);
-        cal.set(Calendar.MONTH, Calendar.FEBRUARY);
-        cal.set(Calendar.DAY_OF_MONTH, 26);
-        cal.set(Calendar.HOUR_OF_DAY, 16);
-        cal.set(Calendar.MINUTE, 0);
+        ZonedDateTime cal = ZonedDateTime.of(1979, 2, 26, 16, 0, 0, 0, ZoneOffset.UTC);
 
         double moonVisible = MoonPhaseFinder.getMoonVisiblePercent(cal);
-        System.out.println("the moon phase on " + formatCalendarAsReallyLongString(cal) +
+        System.out.println("the moon phase on " + formatDateAsReallyLongString(cal) +
                 " is: " + MoonPhaseFinder.findMoonPhaseAt(cal) + ", " + moonVisible);
         assertThat(moonVisible, closeTo(0, 0.001));
     }
 
     @Test
     public void testFindNewMoonFollowing() {
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("America/Chicago"));
-        cal.clear();
-        cal.set(2010, Calendar.OCTOBER, 20);
+        ZonedDateTime cal = ZonedDateTime.of(2010, 10, 20, 0, 0, 0, 0, ZoneId.of("America/Chicago"));
 
-        Date newMoonDate = MoonPhaseFinder.findNewMoonFollowing(cal);
+        ZonedDateTime newMoonDate = MoonPhaseFinder.findNewMoonFollowing(cal);
         assertThat(newMoonDate, is(not(nullValue())));
-        assertThat(formatDateAsShortDateLocalTime(newMoonDate, TimeZone.getTimeZone("America/Chicago")), equalTo("2010-11-06"));
+        assertThat(formatDateAsShortDateLocalTime(newMoonDate, ZoneId.of("America/Chicago")), equalTo("2010-11-06"));
     }
 
     @Test
     public void testFindFullMoonFollowing() {
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("America/Chicago"));
-        cal.clear();
-        cal.set(2010, Calendar.OCTOBER, 20);
+        ZonedDateTime cal = ZonedDateTime.of(2010, 10, 20, 0, 0, 0, 0, ZoneId.of("America/Chicago"));
 
-        Date fullMoonDate = MoonPhaseFinder.findFullMoonFollowing(cal);
+        ZonedDateTime fullMoonDate = MoonPhaseFinder.findFullMoonFollowing(cal);
         assertThat(fullMoonDate, is(not(nullValue())));
-        assertThat(formatDateAsShortDateLocalTime(fullMoonDate, TimeZone.getTimeZone("America/Chicago")), equalTo("2010-10-22"));
+        assertThat(formatDateAsShortDateLocalTime(fullMoonDate, ZoneId.of("America/Chicago")), equalTo("2010-10-22"));
 
-        cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-        cal.clear();
-        cal.set(2010, Calendar.OCTOBER, 20, 00, 00);
-        System.out.println("Date to seek after: " + formatCalendarAsReallyLongString(cal));
+        cal = ZonedDateTime.of(2010, 10, 20, 0, 0, 0, 0, ZoneOffset.UTC);
+        System.out.println("Date to seek after: " + formatDateAsReallyLongString(cal));
 
         fullMoonDate = MoonPhaseFinder.findFullMoonFollowing(cal);
         System.out.println("Date of full moon: " + formatDateAsReallyLongString(fullMoonDate));
         assertThat(fullMoonDate, is(not(nullValue())));
-        assertThat(formatDateAsShortDateLocalTime(fullMoonDate, TimeZone.getTimeZone("America/Chicago")), equalTo("2010-10-22"));
+        assertThat(formatDateAsShortDateLocalTime(fullMoonDate, ZoneId.of("America/Chicago")), equalTo("2010-10-22"));
 
     }
 
     @Test
     public void findEveryFullMoonFor2011() {
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-        cal.set(Calendar.YEAR, 2011);
-        cal.set(Calendar.MONTH, Calendar.JANUARY);
-        cal.set(Calendar.DAY_OF_MONTH, 1);
-        cal.set(Calendar.HOUR_OF_DAY, 1);
-        cal.set(Calendar.MINUTE, 1);
+        ZonedDateTime cal = ZonedDateTime.of(2011, 1, 1, 1, 1, 0, 0, ZoneOffset.UTC);
 
-        Calendar oneYearLater = Calendar.getInstance();
-        oneYearLater.setTimeInMillis(cal.getTimeInMillis());
-        oneYearLater.add(Calendar.YEAR, 1);
+        ZonedDateTime oneYearLater = cal.plusYears(1);
 
         List<String> fullMoonDates = new ArrayList<String>();
-        while ((cal.before(oneYearLater)) && fullMoonDates.size() < 12) {
-            Date nextFullMoon = MoonPhaseFinder.findFullMoonFollowing(cal);
+        while ((cal.isBefore(oneYearLater)) && fullMoonDates.size() < 12) {
+            ZonedDateTime nextFullMoon = MoonPhaseFinder.findFullMoonFollowing(cal);
             fullMoonDates.add(formatDateForGMT(nextFullMoon));
-            cal.add(Calendar.DATE, 30);
+            cal = cal.plusDays(30);
         }
 
         String[] actualFullMoons2011 = {
@@ -122,55 +104,39 @@ public class MoonPhaseFinderTest {
         }
     }
 
-    private static String formatCalendarAsReallyLongString(Calendar cal) {
-        return formatDateAsReallyLongString(cal.getTime());
-    }
-
-    private static String formatDateAsReallyLongString(Date dt) {
-        DateFormat longFormat = DateFormat.getDateTimeInstance(SHORT, SHORT);
-        ((SimpleDateFormat) longFormat).applyPattern("yyyy-MM-dd 'at' HH:mm z Z");
-        return longFormat.format(dt);
+    private static String formatDateAsReallyLongString(ZonedDateTime dt) {
+        return dt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd 'at' HH:mm z Z"));
     }
 	
 	@Test
 	public void exampleFromDocumentation() {
-		DateFormat formatter = new SimpleDateFormat("MMM dd HH:mm:ss zzz yyyy");
-		formatter.setTimeZone(chicagoTimeZone);
-		
-		Calendar cal = Calendar.getInstance(chicagoTimeZone);
-		cal.clear();
-		cal.set(2011, Calendar.JUNE, 12);
-		
-		final Date fullMoon = MoonPhaseFinder.findFullMoonFollowing(cal);
-		assertThat(formatter.format(fullMoon), is("Jun 15 15:25:00 CDT 2011"));
-	}
-	
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM HH:mm:ss zzz yyyy");
+        ZonedDateTime cal = ZonedDateTime.of(2011, 6, 12, 0, 0, 0, 0, chicagoTimeZone);
+
+        final ZonedDateTime fullMoon = MoonPhaseFinder.findFullMoonFollowing(cal);
+        assertThat(fullMoon.format(formatter), is("15.06 15:25:00 CDT 2011"));
+    }
+
 	@Test
 	public void mebourneFullMoonMay2015() {
-		DateFormat formatter = new SimpleDateFormat("MMM dd HH:mm:ss zzz yyyy");
-		formatter.setTimeZone(melbourneTimeZone);
-		
-		Calendar cal = Calendar.getInstance(melbourneTimeZone);
-		cal.clear();
-		cal.set(2015, Calendar.MAY, 1);
-		
-		final Date fullMoon = MoonPhaseFinder.findFullMoonFollowing(cal);
-		// TODO: increase accuracy to May 04 13:42:00
-		assertThat(formatter.format(fullMoon), is("May 04 13:49:00 EST 2015"));
-	}
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM HH:mm:ss zzz yyyy");
+
+        ZonedDateTime cal = ZonedDateTime.of(2015, 5, 1, 0, 0, 0, 0, melbourneTimeZone);
+
+        final ZonedDateTime fullMoon = MoonPhaseFinder.findFullMoonFollowing(cal);
+        // TODO: increase accuracy to May 04 13:42:00
+        assertThat(fullMoon.format(formatter), is("04.05 13:49:00 EST 2015"));
+    }
 
 	@Test
 	public void mebourneFullMoonDec2015() {
-		DateFormat formatter = new SimpleDateFormat("MMM dd HH:mm:ss zzz yyyy");
-		formatter.setTimeZone(melbourneTimeZone);
-		
-		Calendar cal = Calendar.getInstance(melbourneTimeZone);
-		cal.clear();
-		cal.set(2015, Calendar.NOVEMBER, 27);
-		
-		final Date fullMoon = MoonPhaseFinder.findFullMoonFollowing(cal);
-		// TODO: increase accuracey to Dec 25 22:11:00, note is daylight savings time
-		assertThat(formatter.format(fullMoon), is("Dec 25 22:17:00 EST 2015"));
-	}
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM HH:mm:ss zzz yyyy");
+
+        ZonedDateTime cal = ZonedDateTime.of(2015, 11, 27, 0, 0, 0, 0, melbourneTimeZone);
+
+        final ZonedDateTime fullMoon = MoonPhaseFinder.findFullMoonFollowing(cal);
+        // TODO: increase accuracey to Dec 25 22:11:00, note is daylight savings time
+        assertThat(fullMoon.format(formatter), is("25.12 22:16:00 EST 2015"));
+    }
 	
 }

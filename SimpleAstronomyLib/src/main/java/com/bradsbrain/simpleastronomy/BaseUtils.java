@@ -15,34 +15,20 @@
  */
 package com.bradsbrain.simpleastronomy;
 
-import java.text.DateFormat;
-import static java.text.DateFormat.SHORT;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 public final class BaseUtils {
 
-    public static double exactDaysSince(Calendar myCal, double epoch) {
+    public static double exactDaysSince(ZonedDateTime myCal, double epoch) {
         return JulianDate.makeJulianDateUsingMyModified(myCal) - epoch;
-    }
-
-    
-    
-    
-    public static Calendar getSafeLocalCopy(long millis) {
-        // safe local copy
-        Calendar myCal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-        myCal.clear();
-        myCal.setTimeInMillis(millis);
-        return myCal;
     }
 
     public static double adjustTo360Range(double valToAdjust) {
         double howMany = Math.floor(valToAdjust / 360);
-        double adjustedValue = valToAdjust - (howMany * 360);
-        return adjustedValue;
+        return valToAdjust - (howMany * 360);
     }
 
     public static double sinDegrees(double angleInDegrees) {
@@ -61,28 +47,21 @@ public final class BaseUtils {
     /**
      * Useful date-to-string formatting which I found myself using a lot
      *
-     * @param moonDate
      * @return the date in GMT timezone
      */
-    public static String formatDateForGMT(Date moonDate) {
-        DateFormat sdf = SimpleDateFormat.getDateInstance(SHORT);
-        ((SimpleDateFormat) sdf).applyPattern("yyyy-MM-dd");
-        ((SimpleDateFormat) sdf).setTimeZone(TimeZone.getTimeZone("GMT"));
-        return sdf.format(moonDate);
+    public static String formatDateForGMT(ZonedDateTime moonDate) {
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return moonDate.withZoneSameInstant(ZoneOffset.UTC).format(df);
     }
 
     /**
      * Useful date-to-string formatting which I found myself using a lot
      *
-     * @param moonDate
      * @param tz the timezone with which to format the date
      * @return the date in whatever timezone is default
      */
-    public static String formatDateAsShortDateLocalTime(Date moonDate, TimeZone tz) {
-        DateFormat sdf = SimpleDateFormat.getDateInstance(SHORT);
-        sdf.setTimeZone(tz);
-        ((SimpleDateFormat) sdf).applyPattern("yyyy-MM-dd");
-        return sdf.format(moonDate);
+    public static String formatDateAsShortDateLocalTime(ZonedDateTime moonDate, ZoneId tz) {
+        return moonDate.withZoneSameInstant(tz).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
 

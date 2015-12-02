@@ -15,21 +15,20 @@
  */
 package com.bradsbrain.simpleastronomy;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.is;
-import org.junit.Test;
-
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
 
 // external verification
 // http://www.usno.navy.mil/USNO/astronomical-applications/data-services/cal-to-jd-conv/
 // book Practical Astronomy with your Calculator by Peter Duffet-Smith
 
-public class JulianDateTest extends TestCase {
+public class JulianDateTest {
 
     @Test
     public void testSanityMath() {
@@ -42,12 +41,7 @@ public class JulianDateTest extends TestCase {
 
     @Test
     public void testMakeJulianDateSampleDateOnWikipedia() {
-        Calendar c = GregorianCalendar.getInstance(TimeZone.getTimeZone("GMT"));
-        c.clear();
-        c.set(Calendar.YEAR, 2000);
-        c.set(Calendar.MONTH, Calendar.MARCH);
-        c.set(Calendar.DAY_OF_MONTH, 1);
-        c.set(Calendar.HOUR_OF_DAY, 0);
+        ZonedDateTime c = ZonedDateTime.of(2000, 3, 1, 0, 0, 0, 0, ZoneOffset.UTC);
 
         Double julianDate = JulianDate.makeJulianDateUsingMyModified(c);
 
@@ -59,12 +53,7 @@ public class JulianDateTest extends TestCase {
      */
     @Test
     public void testMakeJulianDateSampleDateInBook() {
-        Calendar c = GregorianCalendar.getInstance(TimeZone.getTimeZone("GMT"));
-        c.set(Calendar.YEAR, 1985);
-        c.set(Calendar.MONTH, Calendar.FEBRUARY);
-        c.set(Calendar.DAY_OF_MONTH, 17);
-        c.set(Calendar.HOUR_OF_DAY, 6);
-        c.set(Calendar.SECOND, 0);
+        ZonedDateTime c = ZonedDateTime.of(1985, 2, 17, 6, 0, 0, 0, ZoneOffset.UTC);
 
         Double julianDate = JulianDate.makeJulianDateUsingMyModified(c);
 
@@ -73,16 +62,11 @@ public class JulianDateTest extends TestCase {
 
     @Test
     public void testMakeJulianDateUsingSection46Epoch() {
-        Calendar c = GregorianCalendar.getInstance(TimeZone.getTimeZone("GMT"));
-        c.clear();
-        c.set(Calendar.YEAR, 1990);
-        c.set(Calendar.MONTH, Calendar.JANUARY);
-        c.set(Calendar.DAY_OF_MONTH, 0);
-        c.set(Calendar.HOUR_OF_DAY, 0);
+        ZonedDateTime c = ZonedDateTime.of(1990, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC);
 
         Double julianDate = JulianDate.makeJulianDateUsingMyModified(c);
 
-        assertThat(julianDate, closeTo(2447891.5, 0.05));
+        assertThat(julianDate, closeTo(2447891.5 + 1, 0.05));
     }
 
 }

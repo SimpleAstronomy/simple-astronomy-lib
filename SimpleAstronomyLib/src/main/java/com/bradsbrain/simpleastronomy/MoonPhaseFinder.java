@@ -15,8 +15,8 @@
  */
 package com.bradsbrain.simpleastronomy;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 
 public class MoonPhaseFinder {
 
@@ -44,33 +44,16 @@ public class MoonPhaseFinder {
 
     /**
      * Someday this will return a descriptive MoonPhase enum when handed a cal/date
-     *
-     * @param cal
-     * @return
      */
-    public static MoonPhase findMoonPhaseAt(Calendar cal) {
+    public static MoonPhase findMoonPhaseAt(ZonedDateTime cal) {
         return null;
     }
 
-    public static Date findFullMoonFollowing(Calendar cal) {
+    public static ZonedDateTime findFullMoonFollowing(ZonedDateTime cal) {
         return findDatePassingBounds(cal, fullMoonFinder);
     }
 
-    public static Date findNewMoonFollowing(Calendar cal) {
-        return findDatePassingBounds(cal, newMoonFinder);
-    }
-
-    public static Date findFullMoonFollowing(Date date) {
-        long time = date.getTime();
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(time);
-        return findDatePassingBounds(cal, fullMoonFinder);
-    }
-
-    public static Date findNewMoonFollowing(Date date) {
-        long time = date.getTime();
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(time);
+    public static ZonedDateTime findNewMoonFollowing(ZonedDateTime cal) {
         return findDatePassingBounds(cal, newMoonFinder);
     }
 
@@ -78,39 +61,36 @@ public class MoonPhaseFinder {
      * Finds a type of moon after the given calendar.  Uses a binary search.  Recursive.
      *
      * @param cal         the calendar date for which to compute the moon position
-     * @param moonChecker the NewMoon or FullMoon checker
+     * @param moonFinder  the NewMoon or FullMoon checker
      * @return the forward date which passes the given bounds provided
      */
-    private static Date findDatePassingBounds(Calendar cal, MoonFinder moonFinder) {
-    	int startMinutes =  0, endMinutes = _31_DAYS_AS_MINUTES;
-    	while (1 < (endMinutes - startMinutes)) {
-    		int middleMinutes = startMinutes + ((endMinutes - startMinutes) / 2);
-    		Calendar middleCal = BaseUtils.getSafeLocalCopy(cal.getTimeInMillis());
-    		middleCal.add(Calendar.MINUTE, middleMinutes);
-    		
-    		double percent = 100 * MoonPhaseFinder.getMoonVisiblePercent(middleCal);
-    		double angle = MoonPhaseFinder.getMoonAngle(middleCal);
-    		
-    		if (moonFinder.isMoonBefore(angle, percent)) {
-    			endMinutes = middleMinutes;
-    		} else {
-    			startMinutes = middleMinutes;
-    		}
-    	}
-    	
-    	Calendar myCal = BaseUtils.getSafeLocalCopy(cal.getTimeInMillis());
-    	myCal.add(Calendar.MINUTE, endMinutes);
-    	return myCal.getTime();
+    private static ZonedDateTime findDatePassingBounds(ZonedDateTime cal, MoonFinder moonFinder) {
+        ZonedDateTime start = cal, end = cal.plusDays(31);
+        while (start.until(end, ChronoUnit.MINUTES) > 1) {
+            ZonedDateTime middle = start.plusMinutes(start.until(end, ChronoUnit.MINUTES) / 2);
+
+            if (isMoonBefore(middle, moonFinder)) {
+                end = middle;
+            } else {
+                start = middle;
+            }
+        }
+        return isMoonBefore(start.plusSeconds(30), moonFinder) ? start : end;
+    }
+
+    private static boolean isMoonBefore(ZonedDateTime time, MoonFinder moonFinder) {
+        double percent = 100 * MoonPhaseFinder.getMoonVisiblePercent(time);
+        double angle = MoonPhaseFinder.getMoonAngle(time);
+        return moonFinder.isMoonBefore(angle, percent);
     }
 
     /**
      * Returns a (much-too-)high-precision value for the amount of moon visible.
      * Value will be somewhere in the range 0% to 100%  (i.e. 0.00 to 1.00)
      *
-     * @param cal
      * @return percent of moon which is visible
      */
-    public static double getMoonVisiblePercent(Calendar cal) {
+    public static double getMoonVisiblePercent(ZonedDateTime cal) {
         double moonAngle = getMoonAngle(cal);
         return BaseUtils.useLessPrecision(0.5 * (1 - BaseUtils.cosDegrees(moonAngle)), 3);
     }
@@ -120,13 +100,11 @@ public class MoonPhaseFinder {
      * The moon angle will be in the range 0 to 360.  <br/>
      * 0 or 360 is NEW, 180 is FULL
      *
-     * @param cal
      * @return the angle of the moon in relation to the earth
      */
-    public static double getMoonAngle(Calendar cal) {
-        Calendar myCal = BaseUtils.getSafeLocalCopy(cal.getTimeInMillis());
-        SunPosition sunPos = new SunPosition(myCal);
-        MoonPosition moonPos = new MoonPosition(myCal);
+    public static double getMoonAngle(ZonedDateTime cal) {
+        SunPosition sunPos = new SunPosition(cal);
+        MoonPosition moonPos = new MoonPosition(cal);
 
         double angleAge = moonPos.getTrueLongitude() - sunPos.getEclipticLongitude();
         if (angleAge < 0) {
@@ -134,5 +112,5 @@ public class MoonPhaseFinder {
         }
         return angleAge;
     }
-    
+
 }
