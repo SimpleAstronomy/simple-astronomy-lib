@@ -15,31 +15,24 @@
  */
 package com.bradsbrain.simpleastronomy;
 
-import junit.framework.TestCase;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.closeTo;
 import org.junit.Test;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.closeTo;
 
 
-public class MoonPositionTest extends TestCase {
+public class MoonPositionTest {
 
     @Test
     public void testGetTrueLongitude() {
-        Calendar c = GregorianCalendar.getInstance(TimeZone.getTimeZone("GMT"));
-        c.set(Calendar.YEAR, 1979);
-        c.set(Calendar.MONTH, Calendar.FEBRUARY);
-        c.set(Calendar.DAY_OF_MONTH, 26);
-        c.set(Calendar.HOUR_OF_DAY, 16);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 50);
+        ZonedDateTime c = ZonedDateTime.of(1979, 2, 26, 16, 0, 50, 0, ZoneOffset.UTC);
 
         MoonPosition moonPosition = new MoonPosition(c);
 
-        assertThat(moonPosition.getTrueLongitude(), closeTo(336.967472, 0.025)); // is this close enough? 
+        assertThat(moonPosition.getTrueLongitude(), closeTo(336.967472, 0.025)); // is this close enough?
     }
 
 }

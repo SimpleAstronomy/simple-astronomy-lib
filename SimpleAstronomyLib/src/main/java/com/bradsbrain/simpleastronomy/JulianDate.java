@@ -15,7 +15,8 @@
  */
 package com.bradsbrain.simpleastronomy;
 
-import java.util.Calendar;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 
 /**
  * Heavily based on procedures as documented in the
@@ -30,19 +31,16 @@ public class JulianDate {
      * This method is a simplification of formula in Section 3 of PAwyC3.
      * We'll assume we're only talking about Gregorian Calendar dates because
      * really, we don't care a whole lot about past dates.
-     *
-     * @param cal
-     * @return
      */
-    public static Double makeJulianDateUsingMyModified(Calendar cal) {
-        Calendar myCal = BaseUtils.getSafeLocalCopy(cal.getTimeInMillis());
+    public static Double makeJulianDateUsingMyModified(ZonedDateTime cal) {
+        cal = cal.withZoneSameInstant(ZoneOffset.UTC);
         // step 1
-        int year = myCal.get(Calendar.YEAR);
-        int month = myCal.get(Calendar.MONTH) + 1;    // fix the January=0
-        double day = myCal.get(Calendar.DAY_OF_MONTH);
-        double hour = myCal.get(Calendar.HOUR_OF_DAY) / 24.0;
-        double minute = myCal.get(Calendar.MINUTE) / 24.0 / 60.0;
-        double second = myCal.get(Calendar.SECOND) / 24.0 / 60.0 / 60.0;
+        int year = cal.getYear();
+        int month = cal.getMonthValue();
+        double day = cal.getDayOfMonth();
+        double hour = cal.getHour() / 24.0;
+        double minute = cal.getMinute() / 24.0 / 60.0;
+        double second = cal.getSecond() / 24.0 / 60.0 / 60.0;
 
         // step 2
         if (month <= 2) {

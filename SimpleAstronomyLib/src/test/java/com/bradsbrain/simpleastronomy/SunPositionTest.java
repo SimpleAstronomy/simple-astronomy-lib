@@ -15,26 +15,20 @@
  */
 package com.bradsbrain.simpleastronomy;
 
-import junit.framework.TestCase;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.closeTo;
 import org.junit.Test;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.closeTo;
 
 
-public class SunPositionTest extends TestCase {
+public class SunPositionTest {
 
     @Test
     public void testSunPosition() {
-        Calendar c = GregorianCalendar.getInstance(TimeZone.getTimeZone("GMT"));
-        c.clear();
-        c.set(Calendar.YEAR, 1980);
-        c.set(Calendar.MONTH, Calendar.JULY);
-        c.set(Calendar.DAY_OF_MONTH, 27);
-        c.set(Calendar.HOUR_OF_DAY, 0);
+        ZonedDateTime c = ZonedDateTime.of(1980, 7, 27, 0, 0, 0, 0, ZoneOffset.UTC);
 
         SunPosition sunpos = new SunPosition(c);
 
