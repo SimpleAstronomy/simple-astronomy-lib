@@ -6,7 +6,7 @@
 
     <groupId>com.bradsbrain</groupId>
     <artifactId>SimpleAstronomyLib</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.1-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
