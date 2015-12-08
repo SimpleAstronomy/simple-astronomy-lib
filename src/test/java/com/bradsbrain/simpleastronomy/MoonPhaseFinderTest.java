@@ -52,4 +52,22 @@ public class MoonPhaseFinderTest {
 
         assertThat(formatDateAsShortDateLocalTime(moonEventDate, ZoneOffset.UTC), equalTo("2015-12-03"));
     }
+
+    @Test
+    public void testFindFirstQuarterMoonFollowingJustBeforeItShouldStart() {
+        ZonedDateTime cal = ZonedDateTime.of(2015, 11, 19, 6, 20, 0, 0, ZoneOffset.UTC);
+
+        ZonedDateTime moonEventDate = MoonPhaseFinder.findFirsQuarterFollowing(cal);
+
+        assertThat(formatDateAsShortDateLocalTime(moonEventDate, ZoneOffset.UTC), equalTo("2015-11-19"));
+    }
+
+    @Test
+    public void testFindFirstQuarterMoonFollowingJustAfterItStarted() {
+        ZonedDateTime cal = ZonedDateTime.of(2015, 11, 19, 6, 40, 0, 0, ZoneOffset.UTC);
+
+        ZonedDateTime moonEventDate = MoonPhaseFinder.findFirsQuarterFollowing(cal);
+
+        assertThat(formatDateAsShortDateLocalTime(moonEventDate, ZoneOffset.UTC), equalTo("2015-12-18"));
+    }
 }
