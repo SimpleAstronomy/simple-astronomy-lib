@@ -28,6 +28,10 @@ public class MoonPhaseFinder {
     
     private static final MoonFinder fullMoonFinder = new FullMoonFinder();
 
+    private static final MoonFinder firstQuarterFinder = new FirstQuarterFinder();
+
+    private static final MoonFinder lastQuarterFinder = new LastQuarterFinder();
+
     public enum MoonPhase {
         NEW,
         WAXINGCRESCENT,
@@ -60,10 +64,18 @@ public class MoonPhaseFinder {
         return findFirstAnswerAfter(cal, fullMoonFinder);
     }
 
+    public static ZonedDateTime findLastQuarterFollowing(ZonedDateTime cal) {
+        return findDatePassingBounds(cal, lastQuarterFinder);
+    }
+
     public static ZonedDateTime findNewMoonFollowing(ZonedDateTime cal) {
         return findFirstAnswerAfter(cal, newMoonFinder);
     }
     
+    public static ZonedDateTime findFirsQuarterFollowing(ZonedDateTime cal) {
+        return findDatePassingBounds(cal, firstQuarterFinder);
+    }
+
     /**
      * Tries several close dates and returns the first answer that is after the input calendar.
      * This works around rounding problems that effect the binary search.
