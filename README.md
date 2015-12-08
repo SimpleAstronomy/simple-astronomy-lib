@@ -8,7 +8,7 @@ Initial code based on the book [_Practical Astronomy with your Calculator_](http
 NOTE: additional collaborators welcome
 
 ### Current Functionality
-* Moon Phase - find date for next phase of the moon (full or new)
+* Moon Phase - find date for next phase of the moon (full, new and quarters)
 
 ### Getting Started / Example
 For a brief page on how to use this library, read the [Getting Started page](https://github.com/dustmachine/simple-astronomy-lib/blob/wiki/GettingStartedExample.md )

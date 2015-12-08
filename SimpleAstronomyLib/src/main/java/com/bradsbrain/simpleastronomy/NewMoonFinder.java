@@ -28,7 +28,7 @@ public class NewMoonFinder implements MoonFinder {
 	public boolean isMoonBefore(double angle, double unused) {
 		double usefulAngle = (angle + _180) % _360;
 
-		return 180 <= usefulAngle;
+		return 180 >= angle;
 	}
 
 }

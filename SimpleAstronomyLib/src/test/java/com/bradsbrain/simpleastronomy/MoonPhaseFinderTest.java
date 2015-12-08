@@ -83,6 +83,24 @@ public class MoonPhaseFinderTest {
     }
 
     @Test
+    public void testFindFirstQuarterMoonFollowing() {
+        ZonedDateTime cal = ZonedDateTime.of(2015, 12, 1, 0, 0, 0, 0, ZoneOffset.UTC);
+
+        ZonedDateTime fullMoonDate = MoonPhaseFinder.findFirsQuarterFollowing(cal);
+
+        assertThat(formatDateAsShortDateLocalTime(fullMoonDate, ZoneOffset.UTC), equalTo("2015-12-18"));
+    }
+
+    @Test
+    public void testFindLastQuarterMoonFollowing() {
+        ZonedDateTime cal = ZonedDateTime.of(2015, 12, 1, 0, 0, 0, 0, ZoneOffset.UTC);
+
+        ZonedDateTime fullMoonDate = MoonPhaseFinder.findLastQuarterFollowing(cal);
+
+        assertThat(formatDateAsShortDateLocalTime(fullMoonDate, ZoneOffset.UTC), equalTo("2015-12-03"));
+    }
+
+    @Test
     public void findEveryFullMoonFor2011() {
         ZonedDateTime cal = ZonedDateTime.of(2011, 1, 1, 1, 1, 0, 0, ZoneOffset.UTC);
 

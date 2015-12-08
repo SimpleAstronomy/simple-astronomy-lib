@@ -26,6 +26,10 @@ public class MoonPhaseFinder {
     
     private static final MoonFinder fullMoonFinder = new FullMoonFinder();
 
+    private static final MoonFinder firstQuarterFinder = new FirstQuarterFinder();
+
+    private static final MoonFinder lastQuarterFinder = new LastQuarterFinder();
+
     public enum MoonPhase {
         NEW,
         WAXINGCRESCENT,
@@ -53,8 +57,16 @@ public class MoonPhaseFinder {
         return findDatePassingBounds(cal, fullMoonFinder);
     }
 
+    public static ZonedDateTime findLastQuarterFollowing(ZonedDateTime cal) {
+        return findDatePassingBounds(cal, lastQuarterFinder);
+    }
+
     public static ZonedDateTime findNewMoonFollowing(ZonedDateTime cal) {
         return findDatePassingBounds(cal, newMoonFinder);
+    }
+
+    public static ZonedDateTime findFirsQuarterFollowing(ZonedDateTime cal) {
+        return findDatePassingBounds(cal, firstQuarterFinder);
     }
 
     /**
