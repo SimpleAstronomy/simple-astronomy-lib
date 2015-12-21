@@ -156,7 +156,7 @@ public class MoonPhaseFinderTest {
 		
 		final Date fullMoon = MoonPhaseFinder.findFullMoonFollowing(cal);
 		// TODO: increase accuracy to May 04 13:42:00
-		assertThat(formatter.format(fullMoon), is("May 04 13:49:00 EST 2015"));
+		assertThat(formatter.format(fullMoon), is("May 04 13:49:00 AEST 2015"));
 	}
 
 	@Test
@@ -169,8 +169,8 @@ public class MoonPhaseFinderTest {
 		cal.set(2015, Calendar.NOVEMBER, 27);
 		
 		final Date fullMoon = MoonPhaseFinder.findFullMoonFollowing(cal);
-		// TODO: increase accuracey to Dec 25 22:11:00, note is daylight savings time
-		assertThat(formatter.format(fullMoon), is("Dec 25 22:17:00 EST 2015"));
+		// TODO: increase accuracy to Dec 25 22:11:00, note is daylight savings time
+		assertThat(formatter.format(fullMoon), is("Dec 25 22:17:00 AEDT 2015"));
 	}
 	
 }
