@@ -134,7 +134,7 @@ public class MoonPhaseFinderTest {
 	
 	@Test
 	public void exampleFromDocumentation() {
-		DateFormat formatter = new SimpleDateFormat("MMM dd HH:mm:ss zzz yyyy");
+		DateFormat formatter = new SimpleDateFormat("MMM dd HH:mm:ss zzz yyyy",Locale.ENGLISH);
 		formatter.setTimeZone(chicagoTimeZone);
 		
 		Calendar cal = Calendar.getInstance(chicagoTimeZone);
@@ -147,7 +147,7 @@ public class MoonPhaseFinderTest {
 	
 	@Test
 	public void mebourneFullMoonMay2015() {
-		DateFormat formatter = new SimpleDateFormat("MMM dd HH:mm:ss zzz yyyy");
+		DateFormat formatter = new SimpleDateFormat("MMM dd HH:mm:ss zzz yyyy",Locale.ENGLISH);
 		formatter.setTimeZone(melbourneTimeZone);
 		
 		Calendar cal = Calendar.getInstance(melbourneTimeZone);
@@ -161,7 +161,7 @@ public class MoonPhaseFinderTest {
 
 	@Test
 	public void mebourneFullMoonDec2015() {
-		DateFormat formatter = new SimpleDateFormat("MMM dd HH:mm:ss zzz yyyy");
+		DateFormat formatter = new SimpleDateFormat("MMM dd HH:mm:ss zzz yyyy",Locale.ENGLISH);
 		formatter.setTimeZone(melbourneTimeZone);
 		
 		Calendar cal = Calendar.getInstance(melbourneTimeZone);
