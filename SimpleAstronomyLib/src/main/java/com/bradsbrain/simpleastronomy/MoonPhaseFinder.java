@@ -19,8 +19,6 @@ import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
 public class MoonPhaseFinder {
-
-	private static final int _31_DAYS_AS_MINUTES = 31 * 24 * 60;
 	
     private static final MoonFinder newMoonFinder = new NewMoonFinder();
     
