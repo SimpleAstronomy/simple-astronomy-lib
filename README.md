@@ -30,8 +30,12 @@ For a brief page on how to use this library, read the [Getting Started page](htt
   * Find location of sun or moon (right ascension, declination)
 
 ### Schedule
-  * ~~move the "Getting Started" example to GitHub~~
-  * ~~Initial code commit before April 1, 2011~~ DONE!
-  * ~~Decent documentation on usage before June 30, 2011~~
-  * ~~Jenkins CI builds with Travis CI (Q4 2015)~~
-  * Maven repository registration (Q1 2016)
+ * Maven repository registration (Q1 2016)
+ * Make Java 8 and Android (Java 6) branches and releases
+ * ~~Jenkins CI builds with Travis CI (Q4 2015)~~ 
+ * ~~move the "Getting Started" example to GitHub~~
+ * ~~Decent documentation on usage before June 30, 2011~~ 
+ * ~~Initial code commit before April 1, 2011~~ DONE!
+ 
+ 
+ 
