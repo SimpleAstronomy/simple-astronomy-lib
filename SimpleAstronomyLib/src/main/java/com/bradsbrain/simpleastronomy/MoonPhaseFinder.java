@@ -26,6 +26,10 @@ public class MoonPhaseFinder {
     
     private static final MoonFinder fullMoonFinder = new FullMoonFinder();
 
+    private static final MoonFinder firstQuarterFinder = new FirstQuarterFinder();
+
+    private static final MoonFinder lastQuarterFinder = new LastQuarterFinder();
+
     public enum MoonPhase {
         NEW,
         WAXINGCRESCENT,
@@ -53,8 +57,16 @@ public class MoonPhaseFinder {
         return findDatePassingBounds(cal, fullMoonFinder);
     }
 
+    public static ZonedDateTime findLastQuarterFollowing(ZonedDateTime cal) {
+        return findDatePassingBounds(cal, lastQuarterFinder);
+    }
+
     public static ZonedDateTime findNewMoonFollowing(ZonedDateTime cal) {
         return findDatePassingBounds(cal, newMoonFinder);
+    }
+
+    public static ZonedDateTime findFirsQuarterFollowing(ZonedDateTime cal) {
+        return findDatePassingBounds(cal, firstQuarterFinder);
     }
 
     /**
@@ -65,9 +77,10 @@ public class MoonPhaseFinder {
      * @return the forward date which passes the given bounds provided
      */
     private static ZonedDateTime findDatePassingBounds(ZonedDateTime cal, MoonFinder moonFinder) {
-        ZonedDateTime start = cal, end = cal.plusDays(31);
+        ZonedDateTime start = cal;
+        ZonedDateTime end = cal.plusDays(29).plusHours(20); //plus longest synodic month ever
         while (start.until(end, ChronoUnit.MINUTES) > 1) {
-            ZonedDateTime middle = start.plusMinutes(start.until(end, ChronoUnit.MINUTES) / 2);
+            ZonedDateTime middle = start.plusMinutes(Math.round(start.until(end, ChronoUnit.MINUTES) / 2.125)); //a bit less than the middle as sorter synodic months can be up to 13.5h shorter than the longest one
 
             if (isMoonBefore(middle, moonFinder)) {
                 end = middle;
@@ -75,7 +88,11 @@ public class MoonPhaseFinder {
                 start = middle;
             }
         }
-        return isMoonBefore(start.plusSeconds(30), moonFinder) ? start : end;
+        start = isMoonBefore(start.plusSeconds(30), moonFinder) ? start : end;
+        if (start == cal) {//is the found event actually before the beginning?
+            return findDatePassingBounds(cal.plusDays(15), moonFinder);
+        }
+        return start;
     }
 
     private static boolean isMoonBefore(ZonedDateTime time, MoonFinder moonFinder) {
