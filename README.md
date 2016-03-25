@@ -1,5 +1,5 @@
 # simple-astronomy-lib
-A simple and free astronomy library for calculating moon phase.
+A simple and free astronomy library for calculating moon phases.
 
 A simple (and free) astronomy library for calculating moon phase, solar eclipses, etc. This is intended to be used as a library within other projects, thus the list of dependencies will remain as small as possible.
 
@@ -8,7 +8,11 @@ Initial code based on the book [_Practical Astronomy with your Calculator_](http
 NOTE: additional collaborators welcome
 
 ### Current Functionality
-* Moon Phase - find date for next phase of the moon (full, new and quarters)
+Find dates for Moon Phases
+ * full moon
+ * new moon
+ * first quarter
+ * last quarter 
 
 ### Getting Started / Example
 For a brief page on how to use this library, read the [Getting Started page](https://github.com/dustmachine/simple-astronomy-lib/blob/wiki/GettingStartedExample.md )
@@ -26,7 +30,12 @@ For a brief page on how to use this library, read the [Getting Started page](htt
   * Find location of sun or moon (right ascension, declination)
 
 ### Schedule
-  * ~~move the "Getting Started" example to GitHub~~
-  * ~~Initial code commit before April 1, 2011~~ DONE!
-  * ~~Decent documentation on usage before June 30, 2011~~
-  * Jenkins CI builds (Q2 2015)
+ * Maven repository registration (Q1 2016)
+ * Make Java 8 and Android (Java 6) branches and releases
+ * ~~Jenkins CI builds with Travis CI (Q4 2015)~~ 
+ * ~~move the "Getting Started" example to GitHub~~
+ * ~~Decent documentation on usage before June 30, 2011~~ 
+ * ~~Initial code commit before April 1, 2011~~ DONE!
+ 
+ 
+ 

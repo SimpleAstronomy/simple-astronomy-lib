@@ -23,6 +23,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static com.bradsbrain.simpleastronomy.BaseUtils.formatDateAsShortDateLocalTime;
 import static com.bradsbrain.simpleastronomy.BaseUtils.formatDateForGMT;
@@ -36,7 +37,7 @@ import static org.hamcrest.Matchers.*;
  * Expected output values can be found for Chicago tests at
  * <a href="http://eclipse.gsfc.nasa.gov/phase/phase2001gmt.html">NASA.</a>.
  * 
- * Expected output values cab be found for Melbourne tests at the
+ * Expected output values can be found for Melbourne tests at the
  * <a href="http://museumvictoria.com.au/planetarium/discoverycentre/moon-phases/moon-phases-2015/">Melbourne Planetarium</a>.
  */
 public class MoonPhaseFinderTest {
@@ -44,6 +45,16 @@ public class MoonPhaseFinderTest {
     private static final ZoneId chicagoTimeZone = ZoneId.of("America/Chicago");
 
     private static final ZoneId melbourneTimeZone = ZoneId.of("Australia/Melbourne");
+    
+    private static final DateTimeFormatter chicagoFormatter = DateTimeFormatter
+    		.ofPattern("dd MMM HH:mm:ss Z yyyy")
+    		.withLocale(Locale.ENGLISH)
+    		.withZone(chicagoTimeZone);
+    
+    private static final DateTimeFormatter melbourneFormatter = DateTimeFormatter
+    		.ofPattern("dd MMM HH:mm:ss Z yyyy")
+    		.withLocale(Locale.ENGLISH)
+    		.withZone(melbourneTimeZone);
 
     @Test
     public void testFindMoonPhaseAt() {
@@ -57,20 +68,20 @@ public class MoonPhaseFinderTest {
 
     @Test
     public void testFindNewMoonFollowing() {
-        ZonedDateTime cal = ZonedDateTime.of(2010, 10, 20, 0, 0, 0, 0, ZoneId.of("America/Chicago"));
+        ZonedDateTime cal = ZonedDateTime.of(2010, 10, 20, 0, 0, 0, 0, chicagoTimeZone);
 
         ZonedDateTime newMoonDate = MoonPhaseFinder.findNewMoonFollowing(cal);
         assertThat(newMoonDate, is(not(nullValue())));
-        assertThat(formatDateAsShortDateLocalTime(newMoonDate, ZoneId.of("America/Chicago")), equalTo("2010-11-06"));
+        assertThat(formatDateAsShortDateLocalTime(newMoonDate, chicagoTimeZone), equalTo("2010-11-06"));
     }
 
     @Test
     public void testFindFullMoonFollowing() {
-        ZonedDateTime cal = ZonedDateTime.of(2010, 10, 20, 0, 0, 0, 0, ZoneId.of("America/Chicago"));
+        ZonedDateTime cal = ZonedDateTime.of(2010, 10, 20, 0, 0, 0, 0, chicagoTimeZone);
 
         ZonedDateTime fullMoonDate = MoonPhaseFinder.findFullMoonFollowing(cal);
         assertThat(fullMoonDate, is(not(nullValue())));
-        assertThat(formatDateAsShortDateLocalTime(fullMoonDate, ZoneId.of("America/Chicago")), equalTo("2010-10-22"));
+        assertThat(formatDateAsShortDateLocalTime(fullMoonDate, chicagoTimeZone), equalTo("2010-10-22"));
 
         cal = ZonedDateTime.of(2010, 10, 20, 0, 0, 0, 0, ZoneOffset.UTC);
         System.out.println("Date to seek after: " + formatDateAsReallyLongString(cal));
@@ -78,7 +89,7 @@ public class MoonPhaseFinderTest {
         fullMoonDate = MoonPhaseFinder.findFullMoonFollowing(cal);
         System.out.println("Date of full moon: " + formatDateAsReallyLongString(fullMoonDate));
         assertThat(fullMoonDate, is(not(nullValue())));
-        assertThat(formatDateAsShortDateLocalTime(fullMoonDate, ZoneId.of("America/Chicago")), equalTo("2010-10-22"));
+        assertThat(formatDateAsShortDateLocalTime(fullMoonDate, chicagoTimeZone), equalTo("2010-10-22"));
 
     }
 
@@ -146,33 +157,29 @@ public class MoonPhaseFinderTest {
 	
 	@Test
 	public void exampleFromDocumentation() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM HH:mm:ss zzz yyyy");
         ZonedDateTime cal = ZonedDateTime.of(2011, 6, 12, 0, 0, 0, 0, chicagoTimeZone);
 
         final ZonedDateTime fullMoon = MoonPhaseFinder.findFullMoonFollowing(cal);
-        assertThat(fullMoon.format(formatter), is("15.06 15:25:00 CDT 2011"));
+        assertThat(fullMoon.format(chicagoFormatter), is("15 Jun 15:25:00 -0500 2011"));
     }
 
 	@Test
 	public void mebourneFullMoonMay2015() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM HH:mm:ss zzz yyyy");
 
         ZonedDateTime cal = ZonedDateTime.of(2015, 5, 1, 0, 0, 0, 0, melbourneTimeZone);
 
         final ZonedDateTime fullMoon = MoonPhaseFinder.findFullMoonFollowing(cal);
         // TODO: increase accuracy to May 04 13:42:00
-        assertThat(fullMoon.format(formatter), is("04.05 13:49:00 EST 2015"));
+        assertThat(fullMoon.format(melbourneFormatter), is("04 May 13:49:00 +1000 2015"));
     }
 
 	@Test
 	public void mebourneFullMoonDec2015() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM HH:mm:ss zzz yyyy");
-
         ZonedDateTime cal = ZonedDateTime.of(2015, 11, 27, 0, 0, 0, 0, melbourneTimeZone);
 
         final ZonedDateTime fullMoon = MoonPhaseFinder.findFullMoonFollowing(cal);
         // TODO: increase accuracey to Dec 25 22:11:00, note is daylight savings time
-        assertThat(fullMoon.format(formatter), is("25.12 22:16:00 EST 2015"));
+        assertThat(fullMoon.format(melbourneFormatter), is("25 Dec 22:16:00 +1100 2015"));
     }
 	
 }
