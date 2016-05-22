@@ -16,6 +16,7 @@
 package com.bradsbrain.simpleastronomy;
 
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 
 public class MoonPhaseFinder {
@@ -34,7 +35,6 @@ public class MoonPhaseFinder {
         LASTQUARTER,
         WANINGCRESCENT;
 
-
         static MoonPhase finder(double percent) {
             return FULL;
         }
@@ -48,39 +48,103 @@ public class MoonPhaseFinder {
     }
 
     public static ZonedDateTime findFullMoonFollowing(ZonedDateTime cal) {
-        return findDatePassingBounds(cal, fullMoonFinder);
+        return findRoundedDatePassingBounds(cal, fullMoonFinder);
     }
 
-    public static ZonedDateTime findNewMoonFollowing(ZonedDateTime cal) {
-        return findDatePassingBounds(cal, newMoonFinder);
+	public static ZonedDateTime findNewMoonFollowing(ZonedDateTime cal) {
+        return findRoundedDatePassingBounds(cal, newMoonFinder);
     }
-
+	
+	private static ZonedDateTime findRoundedDatePassingBounds(ZonedDateTime cal, MoonFinder finder) {
+		ZonedDateTime found = findDatePassingBounds(cal, finder);
+		
+		int seconds = found.getSecond();
+		int secondsChange = seconds < 30 ? seconds : -1 * (60 - seconds);
+		
+		return found.minus(secondsChange, ChronoUnit.SECONDS)
+				.minus(found.get(ChronoField.MILLI_OF_SECOND), ChronoUnit.MILLIS);
+	}
+    
     /**
-     * Finds a type of moon after the given calendar.  Uses a binary search.  Recursive.
+     * Finds a type of moon after the given calendar.  Uses a recursive binary search.
      *
      * @param cal         the calendar date for which to compute the moon position
      * @param moonFinder  the NewMoon or FullMoon checker
      * @return the forward date which passes the given bounds provided
      */
-    private static ZonedDateTime findDatePassingBounds(ZonedDateTime cal, MoonFinder moonFinder) {
-        ZonedDateTime start = cal, end = cal.plusDays(31);
-        while (start.until(end, ChronoUnit.MINUTES) > 1) {
-            ZonedDateTime middle = start.plusMinutes(start.until(end, ChronoUnit.MINUTES) / 2);
+	// FIXME: Damon, try a rewrite back to using raw types for moving bounds
+//    private static ZonedDateTime findDatePassingBounds(ZonedDateTime cal, MoonFinder moonFinder) {
+//        ZonedDateTime start = cal, end = cal.plusDays(31);
+//        while (start.until(end, ChronoUnit.MILLIS) > 500) {
+//        	long millisToMiddle = Math.round(start.until(end, ChronoUnit.MILLIS) / 2d);
+//            ZonedDateTime middle = start.plus(millisToMiddle, ChronoUnit.MILLIS);
+//
+//            if (isMoonBefore(middle, moonFinder)) {
+//                end = middle;
+//            } else {
+//                start = middle;
+//            }
+//        }
+//        return end;
+//    }
 
-            if (isMoonBefore(middle, moonFinder)) {
+//	
+//	// FIXME: Damon try bi-binary, biggest in each of two halves.
+//
+//	private static ZonedDateTime biBinarySearch(ZonedDateTime cal, MoonFinder finder) {
+//        long start = 0, end = _31_DAYS_AS_MILLIS;
+//        long middle = start + ((end - start) / 2l);
+//        
+//        ZonedDateTime cal1 = binarySearch(cal, start, middle, finder);
+//        ZonedDateTime cal2 = binarySearch(cal, middle, end, finder);
+//        
+//        double angle1 = 
+//        double angle2 = 
+//        
+//	}
+//	
+//	private static ZonedDateTime binarySearch(ZonedDateTime cal, long start, long end, MoonFinder moonFinder) {
+//		
+//	}
+	
+	private static final long _31_DAYS_AS_MILLIS = 31 * 24l * 60l * 60l * 1000l
+			+ 5l * 60l * 60l * 1000l
+			+ 49l * 60l * 1000l
+			;
+
+//	private static final long _31_DAYS_AS_MILLIS = 29 * 24l * 60l * 60l * 1000l
+//			+ 12l * 60l * 60l * 1000l
+//			;
+
+//	private static final long _31_DAYS_AS_MILLIS = 29 * 24l * 60l * 60l * 1000l
+//	+ 20l * 60l * 1000l
+//	;
+	
+	
+    private static ZonedDateTime findDatePassingBounds(ZonedDateTime cal, MoonFinder moonFinder) {
+    	long start = 0, end = _31_DAYS_AS_MILLIS;
+    	if (moonFinder instanceof LookAheadDays) {
+    		LookAheadDays lookahead = (LookAheadDays) moonFinder;
+    		end = lookahead.daysAheadToLook(cal) * 24l * 60l * 60l * 1000l;
+    	}
+    	
+        ZonedDateTime middleCal = cal;
+        while (500 < (end - start)) {
+        	long middle = start + ((end - start) / 2l);
+        	middleCal = cal.plus(middle, ChronoUnit.MILLIS);
+
+            double percent = 100 * MoonPhaseFinder.getMoonVisiblePercent(middleCal);
+            double angle = MoonPhaseFinder.getMoonAngle(middleCal);
+            if (moonFinder.isMoonBefore(angle, percent)) {
                 end = middle;
             } else {
                 start = middle;
             }
         }
-        return isMoonBefore(start.plusSeconds(30), moonFinder) ? start : end;
+        
+        return middleCal;
     }
-
-    private static boolean isMoonBefore(ZonedDateTime time, MoonFinder moonFinder) {
-        double percent = 100 * MoonPhaseFinder.getMoonVisiblePercent(time);
-        double angle = MoonPhaseFinder.getMoonAngle(time);
-        return moonFinder.isMoonBefore(angle, percent);
-    }
+    
 
     /**
      * Returns a (much-too-)high-precision value for the amount of moon visible.
@@ -112,3 +176,4 @@ public class MoonPhaseFinder {
     }
 
 }
+ 

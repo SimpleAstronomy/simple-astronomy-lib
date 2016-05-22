@@ -17,6 +17,7 @@ package com.bradsbrain.simpleastronomy;
 
 import org.junit.Test;
 
+import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -24,6 +25,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
+import java.util.function.LongConsumer;
+import java.util.stream.LongStream;
 
 import static com.bradsbrain.simpleastronomy.BaseUtils.formatDateAsShortDateLocalTime;
 import static com.bradsbrain.simpleastronomy.BaseUtils.formatDateForGMT;
@@ -123,27 +127,176 @@ public class MoonPhaseFinderTest {
 	public void exampleFromDocumentation() {
         ZonedDateTime cal = ZonedDateTime.of(2011, 6, 12, 0, 0, 0, 0, chicagoTimeZone);
 
-        final ZonedDateTime fullMoon = MoonPhaseFinder.findFullMoonFollowing(cal);
-        assertThat(fullMoon.format(chicagoFormatter), is("15 Jun 15:25:00 -0500 2011"));
+        ZonedDateTime fullMoon = MoonPhaseFinder.findFullMoonFollowing(cal);
+        // FIXME: was 15 Jun 15:25:00 -0500 2011
+        // should be  15 Jun 15:14:00 -0500 2011 ??? recheck on interwebs
+        assertThat(fullMoon.format(chicagoFormatter), is("15 Jun 15:19:00 -0500 2011"));
     }
 
 	@Test
 	public void mebourneFullMoonMay2015() {
-
         ZonedDateTime cal = ZonedDateTime.of(2015, 5, 1, 0, 0, 0, 0, melbourneTimeZone);
 
-        final ZonedDateTime fullMoon = MoonPhaseFinder.findFullMoonFollowing(cal);
+        ZonedDateTime fullMoon = MoonPhaseFinder.findFullMoonFollowing(cal);
         // TODO: increase accuracy to May 04 13:42:00
-        assertThat(fullMoon.format(melbourneFormatter), is("04 May 13:49:00 +1000 2015"));
+        assertThat(fullMoon.format(melbourneFormatter), is("04 May 13:42:00 +1000 2015"));
     }
 
 	@Test
 	public void mebourneFullMoonDec2015() {
         ZonedDateTime cal = ZonedDateTime.of(2015, 11, 27, 0, 0, 0, 0, melbourneTimeZone);
 
-        final ZonedDateTime fullMoon = MoonPhaseFinder.findFullMoonFollowing(cal);
-        // TODO: increase accuracey to Dec 25 22:11:00, note is daylight savings time
-        assertThat(fullMoon.format(melbourneFormatter), is("25 Dec 22:16:00 +1100 2015"));
+        ZonedDateTime fullMoon = MoonPhaseFinder.findFullMoonFollowing(cal);
+        // TODO: increase accuracy to Dec 25 22:11:00, note is daylight savings time
+        assertThat(fullMoon.format(melbourneFormatter), is("25 Dec 22:11:00 +1100 2015"));
     }
+
+	// FIXME: Damon, add rising falling measure tests, make tests against FullMoonFinder
+	
+	@Test
+	public void troubleDateDec2015_00() {
+		givenMelbourneDate("25 Dec 22:09:00 +1100 2015");
+		whenFullMoonIsFound();
+		then25Dec2015IsTheFullMoon();
+	}
+
+	@Test
+	public void troubleDateDec2015_0() {
+		givenMelbourneDate("25 Dec 22:11:49 +1100 2015");
+		whenFullMoonIsFound();
+		then24Jan2016IsTheFullMoon();
+	}
+	
+	
+	@Test
+	public void troubleDateDec2015_1() {
+		givenMelbourneDate("25 Dec 22:16:49 +1100 2015");
+		whenFullMoonIsFound();
+		then24Jan2016IsTheFullMoon();
+	}
+	
+	@Test
+	public void troubleDateDec2015_2() {
+		givenMelbourneDate("25 Dec 22:20:02 +1100 2015");
+		whenFullMoonIsFound();
+		then24Jan2016IsTheFullMoon();
+	}
+	
+	@Test
+	public void troubleDateDec2015_3() {
+		givenMelbourneDate("25 Dec 22:26:48 +1100 2015");
+		whenFullMoonIsFound();
+		then24Jan2016IsTheFullMoon();
+	} 
+	
+	@Test
+	public void troubleDateDec2015_4() {
+		givenMelbourneDate("25 Dec 23:29:27 +1100 2015");
+		whenFullMoonIsFound();
+		then24Jan2016IsTheFullMoon();
+	}
+	 
+	@Test
+	public void troubleDateDec2015_5() {
+		givenMelbourneDate("26 Dec 04:02:14 +1100 2015");
+		whenFullMoonIsFound();
+		then24Jan2016IsTheFullMoon();
+	}
+
+	@Test
+	public void troubleDateJan2016_1() {
+		givenMelbourneDate("24 Jan 11:00:31 +1100 2016");
+		whenFullMoonIsFound();
+		then24Jan2016IsTheFullMoon();
+	}
+	
+	@Test
+	public void troubleDateJan2016_2() {
+		givenMelbourneDate("24 Jan 11:30:31 +1100 2016");
+		whenFullMoonIsFound();
+		then24Jan2016IsTheFullMoon();
+	}
+	
+	@Test
+	public void troubleDateJan2016_3() {
+		givenMelbourneDate("24 Jan 12:00:31 +1100 2016");
+		whenFullMoonIsFound();
+		then24Jan2016IsTheFullMoon();
+	}
+	
+	private String testDateString;
+	private ZonedDateTime testDateTime;
+	private ZonedDateTime foundFullMoon;
+	
+	public void givenMelbourneDate(String dateString) {
+		testDateString = dateString;
+		testDateTime = ZonedDateTime.parse(testDateString, melbourneFormatter);
+	}
+	
+	public void whenFullMoonIsFound() {
+		foundFullMoon = MoonPhaseFinder.findFullMoonFollowing(testDateTime);
+	}
+	
+	public void then24Jan2016IsTheFullMoon() {
+		String melbourneJan2016FullMoonString = "24 Jan 12:54:00 +1100 2016";
+		String fullMoonString = foundFullMoon.format(melbourneFormatter);
+		
+		double testDateAngle = MoonPhaseFinder.getMoonAngle(testDateTime);
+		System.out.println("Input date [" + testDateString + "] has angle [" + testDateAngle + "]");
+		
+		double fullMoonAngle = MoonPhaseFinder.getMoonAngle(foundFullMoon);
+		System.out.println("Full moon  [" + fullMoonString + "] has angle [" + fullMoonAngle + "]");
+
+		ZonedDateTime correct = ZonedDateTime.parse(melbourneJan2016FullMoonString, melbourneFormatter);
+		double correctAngle = MoonPhaseFinder.getMoonAngle(correct);
+		System.out.println("Correct  [" + melbourneJan2016FullMoonString + "] has angle [" + correctAngle + "]");
+		System.out.println();
+		
+		assertThat(fullMoonString, is(melbourneJan2016FullMoonString));
+	}
+	
+	public void then25Dec2015IsTheFullMoon() {
+		String fullMoonString = foundFullMoon.format(melbourneFormatter);
+		assertThat(fullMoonString, is("25 Dec 22:11:00 +1100 2015"));
+	}
+	
+	// FIXME: make a graph of the angles x 20 even spacings throughout the month from Dec 2015 full moon to Jan 2016 full moon
+	// FIXME: from a full moon show now, midpoint, end of duration for 4 durations, 31magic, 31, 29:30 and 29:20
+	
+	/**
+	 * Attempt to detect subtle problems with the binary search inside the
+	 * moon finding algorithm.
+	 */
+	@Test
+	public void twentyThousandFinds() {
+		final String decFullMoon = "25 Dec 22:11:00 +1100 2015";
+		
+		final String janFullMoon = "24 Jan 12:54:00 +1100 2016";
+		final ZonedDateTime decFullMoonDate = ZonedDateTime.parse(decFullMoon, melbourneFormatter);
+		ZonedDateTime janFullMoonDate = ZonedDateTime.parse(janFullMoon, melbourneFormatter);
+		long startEpochMillis = decFullMoonDate.minusDays(28).toInstant().toEpochMilli();
+		long endEpochMillis = janFullMoonDate.toInstant().toEpochMilli();
+		
+		LongStream longs = new Random(808l).longs(20000, startEpochMillis, endEpochMillis);
+		
+		LongConsumer action = new LongConsumer() {	
+			public void accept(long value) {				
+				ZonedDateTime testTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(value), melbourneTimeZone);
+				ZonedDateTime fullMoon = MoonPhaseFinder.findFullMoonFollowing(testTime);
+				
+				System.out.println(testTime.format(melbourneFormatter) + " -> " + fullMoon.format(melbourneFormatter));
+				
+				if (testTime.isAfter(decFullMoonDate)) {
+					assertThat(fullMoon.format(melbourneFormatter), is(janFullMoon));
+				} else {
+					assertThat(fullMoon.format(melbourneFormatter), is(decFullMoon));
+				}
+			}
+		};
+		longs.sequential().forEach(action);
+	}
+
+	
+	// FIXME: need a custom hamcrest matcher, is within 15 minutes of ("<date>")
 	
 }
