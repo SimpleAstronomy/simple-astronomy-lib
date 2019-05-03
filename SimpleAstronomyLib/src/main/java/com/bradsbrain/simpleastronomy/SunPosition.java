@@ -61,19 +61,19 @@ public class SunPosition {
         return someMean < 0 ? someMean + 360 : someMean;
     }
 
-    /**
-     * TODO: implement this someday
-     */
-    public RightAscension getRightAscension() {
-        return null;
-    }
-
-    /**
-     * TODO: implement this someday
-     */
-    public Declination getDeclination() {
-        return null;
-    }
+//    /**
+//     * TODO: implement this someday
+//     */
+//    public RightAscension getRightAscension() {
+//        return null;
+//    }
+//
+//    /**
+//     * TODO: implement this someday
+//     */
+//    public Declination getDeclination() {
+//        return null;
+//    }
 
     public double getEclipticLongitude() {
         return geoEclipticLongitude;

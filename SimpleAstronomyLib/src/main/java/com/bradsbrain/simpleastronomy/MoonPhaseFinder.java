@@ -41,6 +41,9 @@ public class MoonPhaseFinder {
         static MoonPhase finder(double percent) {
             return FULL;
         }
+        
+        // TODO: consider an implementation, start reading at https://www.quia.com/jg/431146list.html
+        // TODO: dateandtime.com has new moon, first moon and third quarter values to make tests with
     }
 
     /**
@@ -51,14 +54,30 @@ public class MoonPhaseFinder {
     }
 
     public static ZonedDateTime findFullMoonFollowing(ZonedDateTime cal) {
-    	// to account for rounding problems, make several dates near the 
+    	return _findFirstAnswerAfter(cal, fullMoonFinder);
+    }
+
+	public static ZonedDateTime findNewMoonFollowing(ZonedDateTime cal) {
+        return _findFirstAnswerAfter(cal, newMoonFinder);
+    }
+	
+	/**
+	 * Tries several close dates and returns the first answer that is after the input calendar.
+	 * This works around rounding problems that effect the binary search.
+	 * 
+	 * @param cal the date to search from
+	 * @param finder the finder to use
+	 * @return the best answer after cal
+	 */
+	private static ZonedDateTime _findFirstAnswerAfter(ZonedDateTime cal, MoonFinder finder) {
+		// To account for rounding problems, make several dates near
+		// and choose the best answer.
+		ZonedDateTime nearDatePast = cal.minusDays(1);
+    	ZonedDateTime nearDateFuture = cal.plusDays(1);
     	
-    	ZonedDateTime nearDatePast = cal.minusHours(24);
-    	ZonedDateTime nearDateFuture = cal.plusHours(24);
-    	
-    	ZonedDateTime answer1 = _findRoundedDatePassingBounds(nearDatePast, fullMoonFinder);
-    	ZonedDateTime answer2 = _findRoundedDatePassingBounds(cal, fullMoonFinder);
-		ZonedDateTime answer3 = _findRoundedDatePassingBounds(nearDateFuture, fullMoonFinder);
+    	ZonedDateTime answer1 = _findRoundedDatePassingBounds(nearDatePast, finder);
+    	ZonedDateTime answer2 = _findRoundedDatePassingBounds(cal, finder);
+		ZonedDateTime answer3 = _findRoundedDatePassingBounds(nearDateFuture, finder);
     	
     	List<ZonedDateTime> sortedCandidates = Arrays.asList(answer1, answer2, answer3);
     	Collections.sort(sortedCandidates);
@@ -69,16 +88,18 @@ public class MoonPhaseFinder {
     		}
     	}
     	
-    	throw new IllegalStateException("Full moon unexpectedly not found.");
-    }
+    	throw new IllegalStateException("Unexpectedly an answer was found.  This is a defect in this library.");
+	}
 
-        
-
-    // FIXME: Damon, fix this method as above
-	public static ZonedDateTime findNewMoonFollowing(ZonedDateTime cal) {
-        return _findRoundedDatePassingBounds(cal, newMoonFinder);
-    }
-	
+    /**
+     * Finds a type of moon after the given calendar.  Uses a recursive binary search.
+     * WARNING: this gives incorrect answers close to a full moon due to rounding errors
+     * which break the binary search.
+     *
+     * @param cal         the calendar date for which to compute the moon position
+     * @param moonFinder  the NewMoon or FullMoon checker
+     * @return the forward date which passes the given bounds provided
+     */
 	private static ZonedDateTime _findRoundedDatePassingBounds(ZonedDateTime cal, MoonFinder finder) {
 		ZonedDateTime found = findDatePassingBounds(cal, finder);
 		
@@ -88,69 +109,23 @@ public class MoonPhaseFinder {
 		return found.minus(secondsChange, ChronoUnit.SECONDS)
 				.minus(found.get(ChronoField.MILLI_OF_SECOND), ChronoUnit.MILLIS);
 	}
-    
-    /**
-     * Finds a type of moon after the given calendar.  Uses a recursive binary search.
-     *
-     * @param cal         the calendar date for which to compute the moon position
-     * @param moonFinder  the NewMoon or FullMoon checker
-     * @return the forward date which passes the given bounds provided
-     */
-	// FIXME: Damon, try a rewrite back to using raw types for moving bounds
-//    private static ZonedDateTime findDatePassingBounds(ZonedDateTime cal, MoonFinder moonFinder) {
-//        ZonedDateTime start = cal, end = cal.plusDays(31);
-//        while (start.until(end, ChronoUnit.MILLIS) > 500) {
-//        	long millisToMiddle = Math.round(start.until(end, ChronoUnit.MILLIS) / 2d);
-//            ZonedDateTime middle = start.plus(millisToMiddle, ChronoUnit.MILLIS);
-//
-//            if (isMoonBefore(middle, moonFinder)) {
-//                end = middle;
-//            } else {
-//                start = middle;
-//            }
-//        }
-//        return end;
-//    }
-
-//	
-//	// FIXME: Damon try bi-binary, biggest in each of two halves.
-//
-//	private static ZonedDateTime biBinarySearch(ZonedDateTime cal, MoonFinder finder) {
-//        long start = 0, end = _31_DAYS_AS_MILLIS;
-//        long middle = start + ((end - start) / 2l);
-//        
-//        ZonedDateTime cal1 = binarySearch(cal, start, middle, finder);
-//        ZonedDateTime cal2 = binarySearch(cal, middle, end, finder);
-//        
-//        double angle1 = 
-//        double angle2 = 
-//        
-//	}
-//	
-//	private static ZonedDateTime binarySearch(ZonedDateTime cal, long start, long end, MoonFinder moonFinder) {
-//		
-//	}
 	
+	/**
+	 * A magic value of longer than a month that minimises the rounding errors
+	 * in calculations. Found through trial and error.
+	 */
 	private static final long _31_DAYS_AS_MILLIS = 31 * 24l * 60l * 60l * 1000l
 			+ 5l * 60l * 60l * 1000l
 			+ 49l * 60l * 1000l
-			;
-
-//	private static final long _31_DAYS_AS_MILLIS = 29 * 24l * 60l * 60l * 1000l
-//			+ 12l * 60l * 60l * 1000l
-//			;
-
-//	private static final long _31_DAYS_AS_MILLIS = 29 * 24l * 60l * 60l * 1000l
-//	+ 20l * 60l * 1000l
-//	;
-	
+			;	
 	
     private static ZonedDateTime findDatePassingBounds(ZonedDateTime cal, MoonFinder moonFinder) {
     	long start = 0, end = _31_DAYS_AS_MILLIS;
-    	if (moonFinder instanceof LookAheadDays) {
-    		LookAheadDays lookahead = (LookAheadDays) moonFinder;
-    		end = lookahead.daysAheadToLook(cal) * 24l * 60l * 60l * 1000l;
-    	}
+    	
+//    	if (moonFinder instanceof LookAheadDays) {
+//    		LookAheadDays lookahead = (LookAheadDays) moonFinder;
+//    		end = lookahead.daysAheadToLook(cal) * 24l * 60l * 60l * 1000l;
+//    	}
     	
         ZonedDateTime middleCal = cal;
         while (500 < (end - start)) {
@@ -168,7 +143,6 @@ public class MoonPhaseFinder {
         
         return middleCal;
     }
-    
 
     /**
      * Returns a (much-too-)high-precision value for the amount of moon visible.
