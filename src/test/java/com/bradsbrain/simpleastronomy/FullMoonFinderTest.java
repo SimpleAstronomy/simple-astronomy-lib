@@ -241,31 +241,31 @@ public class FullMoonFinderTest {
 	 */
 	@Test
 	public void twentyThousandFinds() {
-		final String decFullMoon = "25 Dec 22:11:00 +1100 2015";
-		
-		final String janFullMoon = "24 Jan 12:54:00 +1100 2016";
-		final ZonedDateTime decFullMoonDate = ZonedDateTime.parse(decFullMoon, melbourneFormatter);
-		ZonedDateTime janFullMoonDate = ZonedDateTime.parse(janFullMoon, melbourneFormatter);
-		long startEpochMillis = decFullMoonDate.minusDays(28).toInstant().toEpochMilli();
-		long endEpochMillis = janFullMoonDate.toInstant().toEpochMilli();
-		
-		LongStream longs = new Random(808l).longs(20000, startEpochMillis, endEpochMillis);
-		
-		LongConsumer action = new LongConsumer() {	
-			public void accept(long value) {				
-				ZonedDateTime testTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(value), melbourneTimeZone);
-				ZonedDateTime fullMoon = MoonPhaseFinder.findFullMoonFollowing(testTime);
-				
-				System.out.println(testTime.format(melbourneFormatter) + " -> " + fullMoon.format(melbourneFormatter));
-				
-				if (testTime.isAfter(decFullMoonDate)) {
-					assertThat(fullMoon.format(melbourneFormatter), is(janFullMoon));
-				} else {
-					assertThat(fullMoon.format(melbourneFormatter), is(decFullMoon));
-				}
-			}
-		};
-		longs.sequential().forEach(action);
+        final String decFullMoon = "25 Dec 22:11:00 +1100 2015";
+        
+        final String janFullMoon = "24 Jan 12:54:00 +1100 2016";
+        final ZonedDateTime decFullMoonDate = ZonedDateTime.parse(decFullMoon, melbourneFormatter);
+        ZonedDateTime janFullMoonDate = ZonedDateTime.parse(janFullMoon, melbourneFormatter);
+        long startEpochMillis = decFullMoonDate.minusDays(28).toInstant().toEpochMilli();
+        long endEpochMillis = janFullMoonDate.toInstant().toEpochMilli();
+        
+        LongStream longs = new Random(808l).longs(20000, startEpochMillis, endEpochMillis);
+        
+        LongConsumer action = new LongConsumer() {	
+        	public void accept(long value) {				
+                ZonedDateTime testTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(value), melbourneTimeZone);
+                ZonedDateTime fullMoon = MoonPhaseFinder.findFullMoonFollowing(testTime);
+                
+                System.out.println(testTime.format(melbourneFormatter) + " -> " + fullMoon.format(melbourneFormatter));
+                
+                if (testTime.isAfter(decFullMoonDate)) {
+                    assertThat(fullMoon.format(melbourneFormatter), is(janFullMoon));
+                } else {
+                    assertThat(fullMoon.format(melbourneFormatter), is(decFullMoon));
+                }
+        	}
+        };
+        longs.sequential().forEach(action);
 	}
     
     private static String formatDateAsReallyLongString(ZonedDateTime dt) {

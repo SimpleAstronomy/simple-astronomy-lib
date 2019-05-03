@@ -32,5 +32,5 @@ public class MoonPhaseFinderTest {
         double moonVisible = MoonPhaseFinder.getMoonVisiblePercent(cal);
         assertThat(moonVisible, closeTo(0, 0.001));
     }
-	
+
 }
