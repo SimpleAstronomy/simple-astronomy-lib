@@ -26,6 +26,14 @@ public final class BaseUtils {
         return JulianDate.makeJulianDateUsingMyModified(myCal) - epoch;
     }
 
+    public static Calendar getSafeLocalCopy(long millis) {
+        // safe local copy
+        Calendar myCal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+        myCal.clear();
+        myCal.setTimeInMillis(millis);
+        return myCal;
+    }
+
     public static double adjustTo360Range(double valToAdjust) {
         double howMany = Math.floor(valToAdjust / 360);
         return valToAdjust - (howMany * 360);

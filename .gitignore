@@ -1,5 +1,6 @@
+/target/
+/bin/
 .DS_Store
 .classpath
-.settings
-bin
-target
+.settings/
+>>>>>>> master
