@@ -1,7 +1,5 @@
 package com.bradsbrain.simpleastronomy;
 
-import static org.junit.Assert.*;
-
 import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -12,16 +10,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class FullMoonFinderTest {
-
-	private FullMoonFinder fullMoonFinder;
-	private MoonPhaseFinder phaseFinder; 
 	
     private static final ZoneId melbourneTimeZone = ZoneId.of("Australia/Melbourne");
     
 	@Before
 	public void setUp() throws Exception {
-		fullMoonFinder = new FullMoonFinder();
-		phaseFinder = new MoonPhaseFinder();
+//		private FullMoonFinder fullMoonFinder;
+//		private MoonPhaseFinder phaseFinder; 		
+//		fullMoonFinder = new FullMoonFinder();
+//		phaseFinder = new MoonPhaseFinder();
 	}
 	
     private static final DateTimeFormatter melbourneFormatter = DateTimeFormatter

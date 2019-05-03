@@ -18,6 +18,9 @@ package com.bradsbrain.simpleastronomy;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class MoonPhaseFinder {
 	
@@ -48,14 +51,35 @@ public class MoonPhaseFinder {
     }
 
     public static ZonedDateTime findFullMoonFollowing(ZonedDateTime cal) {
-        return findRoundedDatePassingBounds(cal, fullMoonFinder);
+    	// to account for rounding problems, make several dates near the 
+    	
+    	ZonedDateTime nearDatePast = cal.minusHours(24);
+    	ZonedDateTime nearDateFuture = cal.plusHours(24);
+    	
+    	ZonedDateTime answer1 = _findRoundedDatePassingBounds(nearDatePast, fullMoonFinder);
+    	ZonedDateTime answer2 = _findRoundedDatePassingBounds(cal, fullMoonFinder);
+		ZonedDateTime answer3 = _findRoundedDatePassingBounds(nearDateFuture, fullMoonFinder);
+    	
+    	List<ZonedDateTime> sortedCandidates = Arrays.asList(answer1, answer2, answer3);
+    	Collections.sort(sortedCandidates);
+    	
+    	for (ZonedDateTime dateTime : sortedCandidates) {
+    		if (cal.isBefore(dateTime)) {
+    			return dateTime;
+    		}
+    	}
+    	
+    	throw new IllegalStateException("Full moon unexpectedly not found.");
     }
 
+        
+
+    // FIXME: Damon, fix this method as above
 	public static ZonedDateTime findNewMoonFollowing(ZonedDateTime cal) {
-        return findRoundedDatePassingBounds(cal, newMoonFinder);
+        return _findRoundedDatePassingBounds(cal, newMoonFinder);
     }
 	
-	private static ZonedDateTime findRoundedDatePassingBounds(ZonedDateTime cal, MoonFinder finder) {
+	private static ZonedDateTime _findRoundedDatePassingBounds(ZonedDateTime cal, MoonFinder finder) {
 		ZonedDateTime found = findDatePassingBounds(cal, finder);
 		
 		int seconds = found.getSecond();
