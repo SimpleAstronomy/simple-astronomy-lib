@@ -48,6 +48,9 @@ public class MoonPhaseFinder {
 
     /**
      * Someday this will return a descriptive MoonPhase enum when handed a cal/date
+     * 
+     * @param cal the input date
+     * @return a MoonPhase
      */
     public static MoonPhase findMoonPhaseAt(ZonedDateTime cal) {
         return null;
@@ -147,7 +150,8 @@ public class MoonPhaseFinder {
     /**
      * Returns a (much-too-)high-precision value for the amount of moon visible.
      * Value will be somewhere in the range 0% to 100%  (i.e. 0.00 to 1.00)
-     *
+     * 
+     * @param cal the input date
      * @return percent of moon which is visible
      */
     public static double getMoonVisiblePercent(ZonedDateTime cal) {
@@ -156,10 +160,11 @@ public class MoonPhaseFinder {
     }
 
     /**
-     * The moon angle.  For that we need the sun's position and the moon's position. </br>
-     * The moon angle will be in the range 0 to 360.  <br/>
+     * The moon angle.  For that we need the sun's position and the moon's position. <br>
+     * The moon angle will be in the range 0 to 360.  <br>
      * 0 or 360 is NEW, 180 is FULL
      *
+     * @param cal the input date
      * @return the angle of the moon in relation to the earth
      */
     public static double getMoonAngle(ZonedDateTime cal) {

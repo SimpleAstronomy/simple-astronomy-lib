@@ -31,6 +31,9 @@ public class JulianDate {
      * This method is a simplification of formula in Section 3 of PAwyC3.
      * We'll assume we're only talking about Gregorian Calendar dates because
      * really, we don't care a whole lot about past dates.
+     * 
+     * @param cal the input date
+     * @return the julian date
      */
     public static Double makeJulianDateUsingMyModified(ZonedDateTime cal) {
         cal = cal.withZoneSameInstant(ZoneOffset.UTC);
