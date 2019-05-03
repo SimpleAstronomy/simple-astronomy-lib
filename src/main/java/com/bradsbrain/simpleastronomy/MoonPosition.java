@@ -54,7 +54,7 @@ public class MoonPosition {
     }
 
     /**
-     * Compute the Moon Mean Longitude	l
+     * Compute the Moon Mean Longitude  l
      */
     private double computeMeanLongitude(double daysSince) {
         double moonMeanLongitude = 13.1763966 * daysSince + MEAN_LONGITUDE_AT_EPOCH;
@@ -62,7 +62,7 @@ public class MoonPosition {
     }
 
     /**
-     * Compute the Moon Mean Anomaly	M m
+     * Compute the Moon Mean Anomaly    M m
      */
     private double computeMeanAnomaly(double daysSince, double moonMeanLongitude) {
         double moonMeanAnomaly = moonMeanLongitude

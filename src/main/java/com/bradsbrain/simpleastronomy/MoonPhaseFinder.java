@@ -23,7 +23,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class MoonPhaseFinder {
-	
+    
     private static final MoonFinder newMoonFinder = new NewMoonFinder();
     
     private static final MoonFinder fullMoonFinder = new FullMoonFinder();
@@ -63,7 +63,7 @@ public class MoonPhaseFinder {
     public static ZonedDateTime findNewMoonFollowing(ZonedDateTime cal) {
         return findFirstAnswerAfter(cal, newMoonFinder);
     }
-	
+    
     /**
      * Tries several close dates and returns the first answer that is after the input calendar.
      * This works around rounding problems that effect the binary search.
@@ -86,9 +86,9 @@ public class MoonPhaseFinder {
         Collections.sort(sortedCandidates);
         
         for (ZonedDateTime dateTime : sortedCandidates) {
-        	if (cal.isBefore(dateTime)) {
-        		return dateTime;
-        	}
+            if (cal.isBefore(dateTime)) {
+                return dateTime;
+            }
         }
         
         throw new IllegalStateException("Unexpectedly an answer was found.  This is a defect in this library.");
@@ -104,13 +104,13 @@ public class MoonPhaseFinder {
      * @return the forward date which passes the given bounds provided
      */
     private static ZonedDateTime findRoundedDatePassingBounds(ZonedDateTime cal, MoonFinder finder) {
-		ZonedDateTime found = findDatePassingBounds(cal, finder);
-		
-		int seconds = found.getSecond();
-		int secondsChange = seconds < 30 ? seconds : -1 * (60 - seconds);
-		
-		return found.minus(secondsChange, ChronoUnit.SECONDS)
-				.minus(found.get(ChronoField.MILLI_OF_SECOND), ChronoUnit.MILLIS);
+        ZonedDateTime found = findDatePassingBounds(cal, finder);
+        
+        int seconds = found.getSecond();
+        int secondsChange = seconds < 30 ? seconds : -1 * (60 - seconds);
+        
+        return found.minus(secondsChange, ChronoUnit.SECONDS)
+                .minus(found.get(ChronoField.MILLI_OF_SECOND), ChronoUnit.MILLIS);
     }
     
     /**
@@ -124,11 +124,11 @@ public class MoonPhaseFinder {
     
     private static ZonedDateTime findDatePassingBounds(ZonedDateTime cal, MoonFinder moonFinder) {
         long start = 0, end = _31_DAYS_AS_MILLIS;
-    	
+        
         ZonedDateTime middleCal = cal;
         while (500 < (end - start)) {
-        	long middle = start + ((end - start) / 2l);
-        	middleCal = cal.plus(middle, ChronoUnit.MILLIS);
+            long middle = start + ((end - start) / 2l);
+            middleCal = cal.plus(middle, ChronoUnit.MILLIS);
 
             double percent = 100 * MoonPhaseFinder.getMoonVisiblePercent(middleCal);
             double angle = MoonPhaseFinder.getMoonAngle(middleCal);

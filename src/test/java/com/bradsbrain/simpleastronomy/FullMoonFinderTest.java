@@ -37,22 +37,22 @@ public class FullMoonFinderTest {
     private static final ZoneId melbourneTimeZone = ZoneId.of("Australia/Melbourne");
     
     private static final DateTimeFormatter chicagoFormatter = DateTimeFormatter
-    		.ofPattern("dd MMM HH:mm:ss Z yyyy")
-    		.withLocale(Locale.ENGLISH)
-    		.withZone(chicagoTimeZone);
+            .ofPattern("dd MMM HH:mm:ss Z yyyy")
+            .withLocale(Locale.ENGLISH)
+            .withZone(chicagoTimeZone);
     
     private static final DateTimeFormatter melbourneFormatter = DateTimeFormatter
-    		.ofPattern("dd MMM HH:mm:ss Z yyyy")
-    		.withLocale(Locale.ENGLISH)
-    		.withZone(melbourneTimeZone);
+            .ofPattern("dd MMM HH:mm:ss Z yyyy")
+            .withLocale(Locale.ENGLISH)
+            .withZone(melbourneTimeZone);
 
-	@Before
-	public void setUp() throws Exception {
-//		private FullMoonFinder fullMoonFinder;
-//		private MoonPhaseFinder phaseFinder; 		
-//		fullMoonFinder = new FullMoonFinder();
-//		phaseFinder = new MoonPhaseFinder();
-	}
+    @Before
+    public void setUp() throws Exception {
+//      private FullMoonFinder fullMoonFinder;
+//      private MoonPhaseFinder phaseFinder;        
+//      fullMoonFinder = new FullMoonFinder();
+//      phaseFinder = new MoonPhaseFinder();
+    }
 
     @Test
     public void testFindNewMoonFollowing() {
@@ -104,143 +104,143 @@ public class FullMoonFinderTest {
     }
 
 
-	@Test
-	public void exampleFromDocumentation() {
+    @Test
+    public void exampleFromDocumentation() {
         ZonedDateTime cal = ZonedDateTime.of(2011, 6, 12, 0, 0, 0, 0, chicagoTimeZone);
 
         ZonedDateTime fullMoon = MoonPhaseFinder.findFullMoonFollowing(cal);
         assertThat(fullMoon.format(chicagoFormatter), is("15 Jun 15:19:00 -0500 2011"));
     }
 
-	@Test
-	public void mebourneFullMoonMay2015() {
+    @Test
+    public void mebourneFullMoonMay2015() {
         ZonedDateTime cal = ZonedDateTime.of(2015, 5, 1, 0, 0, 0, 0, melbourneTimeZone);
 
         ZonedDateTime fullMoon = MoonPhaseFinder.findFullMoonFollowing(cal);
         assertThat(fullMoon.format(melbourneFormatter), is("04 May 13:42:00 +1000 2015"));
     }
 
-	@Test
-	public void mebourneFullMoonDec2015() {
+    @Test
+    public void mebourneFullMoonDec2015() {
         ZonedDateTime cal = ZonedDateTime.of(2015, 11, 27, 0, 0, 0, 0, melbourneTimeZone);
 
         ZonedDateTime fullMoon = MoonPhaseFinder.findFullMoonFollowing(cal);
         assertThat(fullMoon.format(melbourneFormatter), is("25 Dec 22:11:00 +1100 2015"));
     }
 
-	@Test
-	public void troubleDateDec2015_00() {
-		givenMelbourneDate("25 Dec 22:09:00 +1100 2015");
-		whenFullMoonIsFound();
-		then25Dec2015IsTheFullMoon();
-	}
+    @Test
+    public void troubleDateDec2015_00() {
+        givenMelbourneDate("25 Dec 22:09:00 +1100 2015");
+        whenFullMoonIsFound();
+        then25Dec2015IsTheFullMoon();
+    }
 
-	@Test
-	public void troubleDateDec2015_0() {
-		givenMelbourneDate("25 Dec 22:11:49 +1100 2015");
-		whenFullMoonIsFound();
-		then24Jan2016IsTheFullMoon();
-	}
-	
-	
-	@Test
-	public void troubleDateDec2015_1() {
-		givenMelbourneDate("25 Dec 22:16:49 +1100 2015");
-		whenFullMoonIsFound();
-		then24Jan2016IsTheFullMoon();
-	}
-	
-	@Test
-	public void troubleDateDec2015_2() {
-		givenMelbourneDate("25 Dec 22:20:02 +1100 2015");
-		whenFullMoonIsFound();
-		then24Jan2016IsTheFullMoon();
-	}
-	
-	@Test
-	public void troubleDateDec2015_3() {
-		givenMelbourneDate("25 Dec 22:26:48 +1100 2015");
-		whenFullMoonIsFound();
-		then24Jan2016IsTheFullMoon();
-	} 
-	
-	@Test
-	public void troubleDateDec2015_4() {
-		givenMelbourneDate("25 Dec 23:29:27 +1100 2015");
-		whenFullMoonIsFound();
-		then24Jan2016IsTheFullMoon();
-	}
-	 
-	@Test
-	public void troubleDateDec2015_5() {
-		givenMelbourneDate("26 Dec 04:02:14 +1100 2015");
-		whenFullMoonIsFound();
-		then24Jan2016IsTheFullMoon();
-	}
+    @Test
+    public void troubleDateDec2015_0() {
+        givenMelbourneDate("25 Dec 22:11:49 +1100 2015");
+        whenFullMoonIsFound();
+        then24Jan2016IsTheFullMoon();
+    }
+    
+    
+    @Test
+    public void troubleDateDec2015_1() {
+        givenMelbourneDate("25 Dec 22:16:49 +1100 2015");
+        whenFullMoonIsFound();
+        then24Jan2016IsTheFullMoon();
+    }
+    
+    @Test
+    public void troubleDateDec2015_2() {
+        givenMelbourneDate("25 Dec 22:20:02 +1100 2015");
+        whenFullMoonIsFound();
+        then24Jan2016IsTheFullMoon();
+    }
+    
+    @Test
+    public void troubleDateDec2015_3() {
+        givenMelbourneDate("25 Dec 22:26:48 +1100 2015");
+        whenFullMoonIsFound();
+        then24Jan2016IsTheFullMoon();
+    } 
+    
+    @Test
+    public void troubleDateDec2015_4() {
+        givenMelbourneDate("25 Dec 23:29:27 +1100 2015");
+        whenFullMoonIsFound();
+        then24Jan2016IsTheFullMoon();
+    }
+     
+    @Test
+    public void troubleDateDec2015_5() {
+        givenMelbourneDate("26 Dec 04:02:14 +1100 2015");
+        whenFullMoonIsFound();
+        then24Jan2016IsTheFullMoon();
+    }
 
-	@Test
-	public void troubleDateJan2016_1() {
-		givenMelbourneDate("24 Jan 11:00:31 +1100 2016");
-		whenFullMoonIsFound();
-		then24Jan2016IsTheFullMoon();
-	}
-	
-	@Test
-	public void troubleDateJan2016_2() {
-		givenMelbourneDate("24 Jan 11:30:31 +1100 2016");
-		whenFullMoonIsFound();
-		then24Jan2016IsTheFullMoon();
-	}
-	
-	@Test
-	public void troubleDateJan2016_3() {
-		givenMelbourneDate("24 Jan 12:00:31 +1100 2016");
-		whenFullMoonIsFound();
-		then24Jan2016IsTheFullMoon();
-	}
-	
-	private String testDateString;
-	private ZonedDateTime testDateTime;
-	private ZonedDateTime foundFullMoon;
-	
-	public void givenMelbourneDate(String dateString) {
-		testDateString = dateString;
-		testDateTime = ZonedDateTime.parse(testDateString, melbourneFormatter);
-	}
-	
-	public void whenFullMoonIsFound() {
-		foundFullMoon = MoonPhaseFinder.findFullMoonFollowing(testDateTime);
-	}
-	
-	public void then24Jan2016IsTheFullMoon() {
-		String melbourneJan2016FullMoonString = "24 Jan 12:54:00 +1100 2016";
-		String fullMoonString = foundFullMoon.format(melbourneFormatter);
-		
-		double testDateAngle = MoonPhaseFinder.getMoonAngle(testDateTime);
-		System.out.println("Input date [" + testDateString + "] has angle [" + testDateAngle + "]");
-		
-		double fullMoonAngle = MoonPhaseFinder.getMoonAngle(foundFullMoon);
-		System.out.println("Full moon  [" + fullMoonString + "] has angle [" + fullMoonAngle + "]");
+    @Test
+    public void troubleDateJan2016_1() {
+        givenMelbourneDate("24 Jan 11:00:31 +1100 2016");
+        whenFullMoonIsFound();
+        then24Jan2016IsTheFullMoon();
+    }
+    
+    @Test
+    public void troubleDateJan2016_2() {
+        givenMelbourneDate("24 Jan 11:30:31 +1100 2016");
+        whenFullMoonIsFound();
+        then24Jan2016IsTheFullMoon();
+    }
+    
+    @Test
+    public void troubleDateJan2016_3() {
+        givenMelbourneDate("24 Jan 12:00:31 +1100 2016");
+        whenFullMoonIsFound();
+        then24Jan2016IsTheFullMoon();
+    }
+    
+    private String testDateString;
+    private ZonedDateTime testDateTime;
+    private ZonedDateTime foundFullMoon;
+    
+    public void givenMelbourneDate(String dateString) {
+        testDateString = dateString;
+        testDateTime = ZonedDateTime.parse(testDateString, melbourneFormatter);
+    }
+    
+    public void whenFullMoonIsFound() {
+        foundFullMoon = MoonPhaseFinder.findFullMoonFollowing(testDateTime);
+    }
+    
+    public void then24Jan2016IsTheFullMoon() {
+        String melbourneJan2016FullMoonString = "24 Jan 12:54:00 +1100 2016";
+        String fullMoonString = foundFullMoon.format(melbourneFormatter);
+        
+        double testDateAngle = MoonPhaseFinder.getMoonAngle(testDateTime);
+        System.out.println("Input date [" + testDateString + "] has angle [" + testDateAngle + "]");
+        
+        double fullMoonAngle = MoonPhaseFinder.getMoonAngle(foundFullMoon);
+        System.out.println("Full moon  [" + fullMoonString + "] has angle [" + fullMoonAngle + "]");
 
-		ZonedDateTime correct = ZonedDateTime.parse(melbourneJan2016FullMoonString, melbourneFormatter);
-		double correctAngle = MoonPhaseFinder.getMoonAngle(correct);
-		System.out.println("Correct  [" + melbourneJan2016FullMoonString + "] has angle [" + correctAngle + "]");
-		System.out.println();
-		
-		assertThat(fullMoonString, is(melbourneJan2016FullMoonString));
-	}
-	
-	public void then25Dec2015IsTheFullMoon() {
-		String fullMoonString = foundFullMoon.format(melbourneFormatter);
-		assertThat(fullMoonString, is("25 Dec 22:11:00 +1100 2015"));
-	}
-	
-	/**
-	 * Attempt to detect subtle problems with the binary search inside the
-	 * moon finding algorithm.
-	 */
-	@Test
-	public void twentyThousandFinds() {
+        ZonedDateTime correct = ZonedDateTime.parse(melbourneJan2016FullMoonString, melbourneFormatter);
+        double correctAngle = MoonPhaseFinder.getMoonAngle(correct);
+        System.out.println("Correct  [" + melbourneJan2016FullMoonString + "] has angle [" + correctAngle + "]");
+        System.out.println();
+        
+        assertThat(fullMoonString, is(melbourneJan2016FullMoonString));
+    }
+    
+    public void then25Dec2015IsTheFullMoon() {
+        String fullMoonString = foundFullMoon.format(melbourneFormatter);
+        assertThat(fullMoonString, is("25 Dec 22:11:00 +1100 2015"));
+    }
+    
+    /**
+     * Attempt to detect subtle problems with the binary search inside the
+     * moon finding algorithm.
+     */
+    @Test
+    public void twentyThousandFinds() {
         final String decFullMoon = "25 Dec 22:11:00 +1100 2015";
         
         final String janFullMoon = "24 Jan 12:54:00 +1100 2016";
@@ -251,8 +251,8 @@ public class FullMoonFinderTest {
         
         LongStream longs = new Random(808l).longs(20000, startEpochMillis, endEpochMillis);
         
-        LongConsumer action = new LongConsumer() {	
-        	public void accept(long value) {				
+        LongConsumer action = new LongConsumer() {  
+            public void accept(long value) {                
                 ZonedDateTime testTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(value), melbourneTimeZone);
                 ZonedDateTime fullMoon = MoonPhaseFinder.findFullMoonFollowing(testTime);
                 
@@ -263,51 +263,51 @@ public class FullMoonFinderTest {
                 } else {
                     assertThat(fullMoon.format(melbourneFormatter), is(decFullMoon));
                 }
-        	}
+            }
         };
         longs.sequential().forEach(action);
-	}
+    }
     
     private static String formatDateAsReallyLongString(ZonedDateTime dt) {
         return dt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd 'at' HH:mm z Z"));
     }
-	
-	// TODO: make a custom hamcrest matcher, is within 15 minutes of ("<date>")    
     
-//	@Test
-//	public void plotAnglesOverMonth() {
-//		String melbourneJan2016FullMoonString = "24 Jan 12:54:00 +1100 2016";
-//		// TODO: last date has wrong angle, why? Bad full moon date??
-//		String melbourneMar2016FullMoonString = "23 Mar 23:00:00 +1100 2016";
-//		
-//		ZonedDateTime melJan2016FullMoon = ZonedDateTime.parse(melbourneJan2016FullMoonString, melbourneFormatter);
-//		ZonedDateTime melMar2016FullMoon = ZonedDateTime.parse(melbourneMar2016FullMoonString, melbourneFormatter);
-//		
-//		int n = 40;
-//		Duration nTh = Duration.between(melJan2016FullMoon, melMar2016FullMoon).dividedBy(n);
-//		
-//		for (int index = 0 ; index < n + 1 ; index++) {
-//			Duration duration = nTh.multipliedBy(index);
-//			ZonedDateTime workingDate = melJan2016FullMoon.plus(duration);
-//			
-//			double testDateAngle = MoonPhaseFinder.getMoonAngle(workingDate);
-//			
-//			String dateString = workingDate.format(melbourneFormatter);
-//			double visible = MoonPhaseFinder.getMoonVisiblePercent(workingDate);
-//			String visibleString = Double.toString(visible);
-//			
-//			ZonedDateTime oneSecondLater = workingDate.plus(Duration.ofHours(1));
-//			double secondAngle = MoonPhaseFinder.getMoonAngle(oneSecondLater);
-//			double secondVisible = MoonPhaseFinder.getMoonVisiblePercent(oneSecondLater);
-//			
-//			String angleChangeType = secondAngle - testDateAngle > 0 ? "rising" : "falling";
-//			String visibleChangeType = secondVisible - visible > 0 ? "rising" : "falling";
-//			
-//			// TODO: try visible percent instead, useful rising metric??
-//			//System.out.println("Date [" + dateString + "] has angle [" + testDateAngle + "] and change is [" + angleChangeType + "]");
-//			System.out.println("Date [" + dateString + "] has visible [" + visibleString + "] and change is [" + visibleChangeType + "]");
-//		}
-//	}
+    // TODO: make a custom hamcrest matcher, is within 15 minutes of ("<date>")    
+    
+//  @Test
+//  public void plotAnglesOverMonth() {
+//      String melbourneJan2016FullMoonString = "24 Jan 12:54:00 +1100 2016";
+//      // TODO: last date has wrong angle, why? Bad full moon date??
+//      String melbourneMar2016FullMoonString = "23 Mar 23:00:00 +1100 2016";
+//      
+//      ZonedDateTime melJan2016FullMoon = ZonedDateTime.parse(melbourneJan2016FullMoonString, melbourneFormatter);
+//      ZonedDateTime melMar2016FullMoon = ZonedDateTime.parse(melbourneMar2016FullMoonString, melbourneFormatter);
+//      
+//      int n = 40;
+//      Duration nTh = Duration.between(melJan2016FullMoon, melMar2016FullMoon).dividedBy(n);
+//      
+//      for (int index = 0 ; index < n + 1 ; index++) {
+//          Duration duration = nTh.multipliedBy(index);
+//          ZonedDateTime workingDate = melJan2016FullMoon.plus(duration);
+//          
+//          double testDateAngle = MoonPhaseFinder.getMoonAngle(workingDate);
+//          
+//          String dateString = workingDate.format(melbourneFormatter);
+//          double visible = MoonPhaseFinder.getMoonVisiblePercent(workingDate);
+//          String visibleString = Double.toString(visible);
+//          
+//          ZonedDateTime oneSecondLater = workingDate.plus(Duration.ofHours(1));
+//          double secondAngle = MoonPhaseFinder.getMoonAngle(oneSecondLater);
+//          double secondVisible = MoonPhaseFinder.getMoonVisiblePercent(oneSecondLater);
+//          
+//          String angleChangeType = secondAngle - testDateAngle > 0 ? "rising" : "falling";
+//          String visibleChangeType = secondVisible - visible > 0 ? "rising" : "falling";
+//          
+//          // TODO: try visible percent instead, useful rising metric??
+//          //System.out.println("Date [" + dateString + "] has angle [" + testDateAngle + "] and change is [" + angleChangeType + "]");
+//          System.out.println("Date [" + dateString + "] has visible [" + visibleString + "] and change is [" + visibleChangeType + "]");
+//      }
+//  }
 
 }
 

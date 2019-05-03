@@ -20,9 +20,9 @@ package com.bradsbrain.simpleastronomy;
  */
 public class NewMoonFinder implements MoonFinder {
 
-	/** {@inheritDoc} */
-	public boolean isMoonBefore(double angle, double unused) {
-		return 180 >= angle;
-	}
+    /** {@inheritDoc} */
+    public boolean isMoonBefore(double angle, double unused) {
+        return 180 >= angle;
+    }
 
 }
