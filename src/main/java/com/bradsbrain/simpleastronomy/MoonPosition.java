@@ -15,15 +15,15 @@
  */
 package com.bradsbrain.simpleastronomy;
 
-import static com.bradsbrain.simpleastronomy.BaseUtils.sinDegrees;
+import java.time.ZonedDateTime;
 
-import java.util.Calendar;
+import static com.bradsbrain.simpleastronomy.BaseUtils.sinDegrees;
 
 public class MoonPosition {
     // some handy constants
-    private double EPOCH = 2447891.5; // 1990 January 0.0
-    private double MEAN_LONGITUDE_AT_EPOCH = 318.351648;
-    private double MEAN_LONGITUDE_OF_PERIGREE_AT_EPOCH = 36.340410;
+    private static final double EPOCH = 2447891.5; // 1990 January 0.0
+    private static final double MEAN_LONGITUDE_AT_EPOCH = 318.351648;
+    private static final double MEAN_LONGITUDE_OF_PERIGREE_AT_EPOCH = 36.340410;
 
     /**
      * The True Longitude
@@ -35,16 +35,15 @@ public class MoonPosition {
      *
      * @param cal the calendar date for which to compute the moon position
      */
-    public MoonPosition(Calendar cal) {
-        Calendar myCal = BaseUtils.getSafeLocalCopy(cal.getTimeInMillis());
-        double daysSince = BaseUtils.exactDaysSince(myCal, EPOCH);
+    public MoonPosition(ZonedDateTime cal) {
+        double daysSince = BaseUtils.exactDaysSince(cal, EPOCH);
 
         // l
         double moonMeanLongitude = computeMeanLongitude(daysSince);
         // M m
         double moonMeanAnomaly = computeMeanAnomaly(daysSince, moonMeanLongitude);
 
-        SunPosition sunPos = new SunPosition(myCal);
+        SunPosition sunPos = new SunPosition(cal);
 
         MoonCorrections corrections = new MoonCorrections(moonMeanLongitude, moonMeanAnomaly, sunPos.getEclipticLongitude(), sunPos.getMeanAnomaly());
         trueOrbitalLongitude = corrections.getCorrectedLongitude() - corrections.getVariationCorrection();
@@ -55,10 +54,7 @@ public class MoonPosition {
     }
 
     /**
-     * Compute the Moon Mean Longitude	l
-     *
-     * @param daysSince
-     * @return
+     * Compute the Moon Mean Longitude  l
      */
     private double computeMeanLongitude(double daysSince) {
         double moonMeanLongitude = 13.1763966 * daysSince + MEAN_LONGITUDE_AT_EPOCH;
@@ -66,11 +62,7 @@ public class MoonPosition {
     }
 
     /**
-     * Compute the Moon Mean Anomaly	M m
-     *
-     * @param daysSince
-     * @param moonMeanLongitude
-     * @return
+     * Compute the Moon Mean Anomaly    M m
      */
     private double computeMeanAnomaly(double daysSince, double moonMeanLongitude) {
         double moonMeanAnomaly = moonMeanLongitude
@@ -98,8 +90,6 @@ public class MoonPosition {
 
         /**
          * V
-         *
-         * @return
          */
         public double getVariationCorrection() {
             return 0.6583 * sinDegrees(2 * (getCorrectedLongitude() - sunLongitude));
@@ -107,8 +97,6 @@ public class MoonPosition {
 
         /**
          * l'
-         *
-         * @return
          */
         public double getCorrectedLongitude() {
             return moonMeanLongitude
@@ -120,8 +108,6 @@ public class MoonPosition {
 
         /**
          * A 4
-         *
-         * @return
          */
         private double getYetAnotherCorrectionTerm() {
             return 0.214 * sinDegrees(2 * getMoonCorrectedAnomaly());
@@ -129,8 +115,6 @@ public class MoonPosition {
 
         /**
          * E c
-         *
-         * @return
          */
         private double getCorrectionForEquationCentre() {
             return 6.2886 * sinDegrees(getMoonCorrectedAnomaly());
@@ -138,8 +122,6 @@ public class MoonPosition {
 
         /**
          * M' m
-         *
-         * @return
          */
         private double getMoonCorrectedAnomaly() {
             return moonMeanAnomaly + getEvictionCorrection() - getAnnualEquationCorrection() - getUnnamedThirdCorrection();
@@ -147,8 +129,6 @@ public class MoonPosition {
 
         /**
          * E v
-         *
-         * @return
          */
         public double getEvictionCorrection() {
             double C = moonMeanLongitude - sunLongitude;
@@ -157,8 +137,6 @@ public class MoonPosition {
 
         /**
          * A e
-         *
-         * @return
          */
         public double getAnnualEquationCorrection() {
             return 0.1858 * sinDegrees(sunMeanAnomaly);
@@ -166,8 +144,6 @@ public class MoonPosition {
 
         /**
          * A 3
-         *
-         * @return
          */
         public double getUnnamedThirdCorrection() {
             return 0.37 * sinDegrees(sunMeanAnomaly);
