@@ -55,15 +55,6 @@ public class FullMoonFinderTest {
     }
 
     @Test
-    public void testFindNewMoonFollowing() {
-        ZonedDateTime cal = ZonedDateTime.of(2010, 10, 20, 0, 0, 0, 0, chicagoTimeZone);
-
-        ZonedDateTime newMoonDate = MoonPhaseFinder.findNewMoonFollowing(cal);
-        assertThat(newMoonDate, is(not(nullValue())));
-        assertThat(formatDateAsShortDateLocalTime(newMoonDate, chicagoTimeZone), equalTo("2010-11-06"));
-    }
-
-    @Test
     public void testFindFullMoonFollowing() {
         ZonedDateTime cal = ZonedDateTime.of(2010, 10, 20, 0, 0, 0, 0, chicagoTimeZone);
 
