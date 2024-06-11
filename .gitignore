@@ -2,6 +2,7 @@
 /bin/
 .DS_Store
 .classpath
+.idea
 .settings/
 /.idea/
 >>>>>>> master

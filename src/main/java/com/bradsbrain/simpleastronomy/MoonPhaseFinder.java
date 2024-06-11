@@ -16,17 +16,17 @@
 package com.bradsbrain.simpleastronomy;
 
 import java.time.ZonedDateTime;
-import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public class MoonPhaseFinder {
-    
+
     private static final MoonFinder newMoonFinder = new NewMoonFinder();
-    
+
     private static final MoonFinder fullMoonFinder = new FullMoonFinder();
+
+    private static final MoonFinder firstQuarterFinder = new FirstQuarterFinder();
+
+    private static final MoonFinder lastQuarterFinder = new LastQuarterFinder();
 
     public enum MoonPhase {
         NEW,
@@ -41,14 +41,14 @@ public class MoonPhaseFinder {
         static MoonPhase finder(double percent) {
             return FULL;
         }
-        
+
         // TODO: consider an implementation, start reading at https://www.quia.com/jg/431146list.html
         // TODO: dateandtime.com has new moon, first moon and third quarter values to make tests with
     }
 
     /**
      * Someday this will return a descriptive MoonPhase enum when handed a cal/date
-     * 
+     *
      * @param cal the input date
      * @return a MoonPhase
      */
@@ -57,77 +57,30 @@ public class MoonPhaseFinder {
     }
 
     public static ZonedDateTime findFullMoonFollowing(ZonedDateTime cal) {
-        return findFirstAnswerAfter(cal, fullMoonFinder);
+        return findDatePassingBounds(cal, fullMoonFinder);
+    }
+
+    public static ZonedDateTime findLastQuarterFollowing(ZonedDateTime cal) {
+        return findDatePassingBounds(cal, lastQuarterFinder);
     }
 
     public static ZonedDateTime findNewMoonFollowing(ZonedDateTime cal) {
-        return findFirstAnswerAfter(cal, newMoonFinder);
-    }
-    
-    /**
-     * Tries several close dates and returns the first answer that is after the input calendar.
-     * This works around rounding problems that effect the binary search.
-     * 
-     * @param cal the date to search from
-     * @param finder the finder to use
-     * @return the best answer after cal
-     */
-    private static ZonedDateTime findFirstAnswerAfter(ZonedDateTime cal, MoonFinder finder) {
-        // To account for rounding problems, make several dates near
-        // and choose the best answer.
-        ZonedDateTime nearDatePast = cal.minusDays(1);
-        ZonedDateTime nearDateFuture = cal.plusDays(1);
-        
-        ZonedDateTime answer1 = findRoundedDatePassingBounds(nearDatePast, finder);
-        ZonedDateTime answer2 = findRoundedDatePassingBounds(cal, finder);
-        ZonedDateTime answer3 = findRoundedDatePassingBounds(nearDateFuture, finder);
-        
-        List<ZonedDateTime> sortedCandidates = Arrays.asList(answer1, answer2, answer3);
-        Collections.sort(sortedCandidates);
-        
-        for (ZonedDateTime dateTime : sortedCandidates) {
-            if (cal.isBefore(dateTime)) {
-                return dateTime;
-            }
-        }
-        
-        throw new IllegalStateException("Unexpectedly an answer was found.  This is a defect in this library.");
+        return findDatePassingBounds(cal, newMoonFinder);
     }
 
-    /**
-     * Finds a type of moon after the given calendar.  Uses a recursive binary search.
-     * WARNING: this gives incorrect answers close to a full moon due to rounding errors
-     * which break the binary search.
-     *
-     * @param cal         the calendar date for which to compute the moon position
-     * @param moonFinder  the NewMoon or FullMoon checker
-     * @return the forward date which passes the given bounds provided
-     */
-    private static ZonedDateTime findRoundedDatePassingBounds(ZonedDateTime cal, MoonFinder finder) {
-        ZonedDateTime found = findDatePassingBounds(cal, finder);
-        
-        int seconds = found.getSecond();
-        int secondsChange = seconds < 30 ? seconds : -1 * (60 - seconds);
-        
-        return found.minus(secondsChange, ChronoUnit.SECONDS)
-                .minus(found.get(ChronoField.MILLI_OF_SECOND), ChronoUnit.MILLIS);
+    public static ZonedDateTime findFirsQuarterFollowing(ZonedDateTime cal) {
+        return findDatePassingBounds(cal, firstQuarterFinder);
     }
-    
-    /**
-     * A magic value of longer than a month that minimises the rounding errors
-     * in calculations. Found through trial and error.
-     */
-    private static final long _31_DAYS_AS_MILLIS = 31 * 24l * 60l * 60l * 1000l
-            + 5l * 60l * 60l * 1000l
-            + 49l * 60l * 1000l
-            ;
-    
+
+    private static final long LONGEST_SYNODIC_MONTH_EVER = (29 * 24 + 20) * 3600000L;
+
     private static ZonedDateTime findDatePassingBounds(ZonedDateTime cal, MoonFinder moonFinder) {
-        long start = 0, end = _31_DAYS_AS_MILLIS;
-        
+        long start = 0;
+        long end = LONGEST_SYNODIC_MONTH_EVER;
+
         ZonedDateTime middleCal = cal;
         while (500 < (end - start)) {
-            long middle = start + ((end - start) / 2l);
+            long middle = start + Math.round((end - start) / 2.125); //a bit less than the middle as shorter synodic months can be up to 13.5h shorter than the longest one
             middleCal = cal.plus(middle, ChronoUnit.MILLIS);
 
             double percent = 100 * MoonPhaseFinder.getMoonVisiblePercent(middleCal);
@@ -138,14 +91,26 @@ public class MoonPhaseFinder {
                 start = middle;
             }
         }
-        
-        return middleCal;
+
+        ZonedDateTime result = roundToMinutes(middleCal);
+        if (start > 0) {
+            return result;
+        }
+        return findDatePassingBounds(cal.plusDays(15), moonFinder);
+    }
+
+    private static ZonedDateTime roundToMinutes(ZonedDateTime input) {
+        ZonedDateTime result = input.withSecond(0).withNano(0);
+        if (input.getSecond() * 1_000_000_000L + input.getNano() >= 30_000_000_000L) {
+            result = result.plusMinutes(1);
+        }
+        return result;
     }
 
     /**
      * Returns a (much-too-)high-precision value for the amount of moon visible.
      * Value will be somewhere in the range 0% to 100%  (i.e. 0.00 to 1.00)
-     * 
+     *
      * @param cal the input date
      * @return percent of moon which is visible
      */
@@ -172,6 +137,6 @@ public class MoonPhaseFinder {
         }
         return angleAge;
     }
-    
+
 }
  

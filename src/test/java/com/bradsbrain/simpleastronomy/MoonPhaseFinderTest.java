@@ -15,8 +15,10 @@
  */
 package com.bradsbrain.simpleastronomy;
 
+import static com.bradsbrain.simpleastronomy.BaseUtils.formatDateAsShortDateLocalTime;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.closeTo;
+import static org.hamcrest.Matchers.equalTo;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -33,4 +35,39 @@ public class MoonPhaseFinderTest {
         assertThat(moonVisible, closeTo(0, 0.001));
     }
 
+    @Test
+    public void testFindFirstQuarterMoonFollowing() {
+        ZonedDateTime cal = ZonedDateTime.of(2015, 12, 1, 0, 0, 0, 0, ZoneOffset.UTC);
+
+        ZonedDateTime moonEventDate = MoonPhaseFinder.findFirsQuarterFollowing(cal);
+
+        assertThat(formatDateAsShortDateLocalTime(moonEventDate, ZoneOffset.UTC), equalTo("2015-12-18"));
+    }
+
+    @Test
+    public void testFindLastQuarterMoonFollowing() {
+        ZonedDateTime cal = ZonedDateTime.of(2015, 12, 1, 0, 0, 0, 0, ZoneOffset.UTC);
+
+        ZonedDateTime moonEventDate = MoonPhaseFinder.findLastQuarterFollowing(cal);
+
+        assertThat(formatDateAsShortDateLocalTime(moonEventDate, ZoneOffset.UTC), equalTo("2015-12-03"));
+    }
+
+    @Test
+    public void testFindFirstQuarterMoonFollowingJustBeforeItShouldStart() {
+        ZonedDateTime cal = ZonedDateTime.of(2015, 11, 19, 6, 20, 0, 0, ZoneOffset.UTC);
+
+        ZonedDateTime moonEventDate = MoonPhaseFinder.findFirsQuarterFollowing(cal);
+
+        assertThat(formatDateAsShortDateLocalTime(moonEventDate, ZoneOffset.UTC), equalTo("2015-11-19"));
+    }
+
+    @Test
+    public void testFindFirstQuarterMoonFollowingJustAfterItStarted() {
+        ZonedDateTime cal = ZonedDateTime.of(2015, 11, 19, 6, 40, 0, 0, ZoneOffset.UTC);
+
+        ZonedDateTime moonEventDate = MoonPhaseFinder.findFirsQuarterFollowing(cal);
+
+        assertThat(formatDateAsShortDateLocalTime(moonEventDate, ZoneOffset.UTC), equalTo("2015-12-18"));
+    }
 }

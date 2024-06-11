@@ -1,6 +1,4 @@
 /*
- *  Copyright 2011 Brad Parks
- *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -15,22 +13,16 @@
  */
 package com.bradsbrain.simpleastronomy;
 
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
+/**
+ * Provides a first quarter finding calculation for use in a binary search.
+ */
+public class FirstQuarterFinder implements MoonFinder {
 
-public class JulianDate {
+    private static final double LAST_QUARTER_ANGLE = 270;
 
-    private static final ZonedDateTime DAY_ZERO = ZonedDateTime.of(-4713, 11, 24, 12, 0, 0, 0, ZoneOffset.UTC);
+    private static final double FIRST_QUARTER_ANGLE = 90;
 
-    /**
-     * This method might not be accurate for older dates but works fine for nowadays
-     *
-     * @param cal the input date
-     * @return the julian date
-     */
-    public static Double makeJulianDateUsingMyModified(ZonedDateTime cal) {
-        return (double) ChronoUnit.SECONDS.between(DAY_ZERO, cal) / 24 / 3600;
+    public boolean isMoonBefore(double angle, double unused) {
+        return angle > FIRST_QUARTER_ANGLE && angle <= LAST_QUARTER_ANGLE;
     }
-
 }

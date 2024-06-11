@@ -69,4 +69,18 @@ public class JulianDateTest {
         assertThat(julianDate, closeTo(2447891.5 + 1, 0.05));
     }
 
+    @Test
+    public void testMakeJulianDateOnLeapYear() {
+        ZonedDateTime feb = ZonedDateTime.of(2016, 2, 29, 12, 0, 0, 0, ZoneOffset.UTC);
+        ZonedDateTime mar = ZonedDateTime.of(2016, 3, 1, 12, 0, 0, 0, ZoneOffset.UTC);
+
+        double julianDateFeb = JulianDate.makeJulianDateUsingMyModified(feb);
+        double julianDateMar = JulianDate.makeJulianDateUsingMyModified(mar);
+
+        double expectedFeb = 2457448; //according to http://www.onlineconversion.com/julian_date.htm
+        assertThat(julianDateFeb, closeTo(expectedFeb, 0.05));
+        assertThat(julianDateMar, closeTo(expectedFeb + 1, 0.05));
+
+    }
+
 }
