@@ -1,0 +1,26 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+}
+
+group = 'com.bradsbrain'
+version = '0.3.0'
+description = 'SimpleAstronomyLib'
+java.sourceCompatibility = JavaVersion.VERSION_1_8
+
+repositories {
+    mavenLocal()
+    maven {
+        url = uri('https://repo.maven.apache.org/maven2/')
+    }
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.14.4'
+    testImplementation 'org.hamcrest:hamcrest:3.0'
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}

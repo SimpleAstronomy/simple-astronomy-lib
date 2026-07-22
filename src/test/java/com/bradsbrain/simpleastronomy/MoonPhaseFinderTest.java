@@ -23,7 +23,7 @@ import static org.hamcrest.Matchers.equalTo;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class MoonPhaseFinderTest {
 
