@@ -20,12 +20,11 @@ import java.util.Random;
 import java.util.function.LongConsumer;
 import java.util.stream.LongStream;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Expected output values can be found for Chicago tests at
- * <a href="http://eclipse.gsfc.nasa.gov/phase/phase2001gmt.html">NASA.</a>.
+ * <a href="http://eclipse.gsfc.nasa.gov/phase/phase2001gmt.html">NASA</a>.
  * 
  * Expected output values can be found for Melbourne tests at
  * <a href="https://www.timeanddate.com/moon/phases/australia/melbourne?year=2015">timeanddate.com</a>.
@@ -45,15 +44,7 @@ public class FullMoonFinderTest {
             .ofPattern("dd MMM HH:mm:ss Z yyyy")
             .withLocale(Locale.ENGLISH)
             .withZone(melbourneTimeZone);
-
-    @Before
-    public void setUp() throws Exception {
-//      private FullMoonFinder fullMoonFinder;
-//      private MoonPhaseFinder phaseFinder;        
-//      fullMoonFinder = new FullMoonFinder();
-//      phaseFinder = new MoonPhaseFinder();
-    }
-
+    
     @Test
     public void testFindNewMoonFollowing() {
         ZonedDateTime cal = ZonedDateTime.of(2010, 10, 20, 0, 0, 0, 0, chicagoTimeZone);
@@ -87,7 +78,7 @@ public class FullMoonFinderTest {
 
         ZonedDateTime oneYearLater = cal.plusYears(1);
 
-        List<String> fullMoonDates = new ArrayList<String>();
+        List<String> fullMoonDates = new ArrayList<>();
         while ((cal.isBefore(oneYearLater)) && fullMoonDates.size() < 12) {
             ZonedDateTime nextFullMoon = MoonPhaseFinder.findFullMoonFollowing(cal);
             fullMoonDates.add(formatDateForGMT(nextFullMoon));
@@ -249,7 +240,7 @@ public class FullMoonFinderTest {
         long startEpochMillis = decFullMoonDate.minusDays(28).toInstant().toEpochMilli();
         long endEpochMillis = janFullMoonDate.toInstant().toEpochMilli();
         
-        LongStream longs = new Random(808l).longs(20000, startEpochMillis, endEpochMillis);
+        LongStream longs = new Random(808L).longs(20000, startEpochMillis, endEpochMillis);
         
         LongConsumer action = new LongConsumer() {  
             public void accept(long value) {                
