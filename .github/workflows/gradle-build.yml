@@ -1,11 +1,10 @@
 name: Gradle Build
 
 on:
+  pull_request:
   push:
     branches:
-      - '**'
-  pull_request:
-
+      - main
 permissions:
   contents: read
 
