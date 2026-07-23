@@ -22,7 +22,7 @@ import java.time.ZonedDateTime;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.closeTo;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.instanceOf;
 
 // external verification
 // http://www.usno.navy.mil/USNO/astronomical-applications/data-services/cal-to-jd-conv/
@@ -34,9 +34,9 @@ public class JulianDateTest {
     public void testSanityMath() {
         int fingers = 5;
         double weight = 190.0;
-        assertThat(1 / fingers, is(Integer.class));      //      int/int is an int
-        assertThat(weight / fingers, is(Double.class));  //      double/int is a double
-        assertThat(fingers / weight, is(Double.class));  //      int/double is a double
+        assertThat(1 / fingers, instanceOf(Integer.class));      // int/int is an int
+        assertThat(weight / fingers, instanceOf(Double.class));  // double/int is a double
+        assertThat(fingers / weight, instanceOf(Double.class));  // int/double is a double
     }
 
     @Test
