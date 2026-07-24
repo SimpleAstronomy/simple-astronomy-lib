@@ -1,6 +1,6 @@
 plugins {
     id 'java-library'
-    id 'maven-publish'
+    id 'jacoco'
 }
 
 group = 'com.bradsbrain'
@@ -30,4 +30,18 @@ java {
 
 test {
     useJUnitPlatform()
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.78
+            }
+        }
+    }
+}
+
+tasks.check {
+    dependsOn(tasks.jacocoTestCoverageVerification)
 }
