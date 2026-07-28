@@ -19,7 +19,6 @@ For a brief page on how to use this library, read the [Getting Started page](htt
 
 ### Project Goals
   * Minimize number of dependencies (useful for mobile device usage)
-  * Automated unit test coverage of more than 75% of code
   * Accuracy to within 5 minutes (currently +/-15 minutes)
 
 ### New Features Under Consideration
@@ -30,7 +29,8 @@ For a brief page on how to use this library, read the [Getting Started page](htt
   * Find location of sun or moon (right ascension, declination)
 
 ### Schedule
-  * ~~move the "Getting Started" example to GitHub~~
+  * ~~move the "Getting Started" example to GitHub~~ DONE!
   * ~~Initial code commit before April 1, 2011~~ DONE!
-  * ~~Decent documentation on usage before June 30, 2011~~
-  * Jenkins CI builds (Q2 2015)
+  * ~~Decent documentation on usage before June 30, 2011~~ DONE!
+  * ~~Github Actions CI builds 2026~~ DONE!
+  * ~~Automated unit test coverage of more than 75% of code 2026~~ DONE!

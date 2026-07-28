@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.bradsbrain.simpleastronomy;
+package org.simpleastronomy.lib;
 
-/**
- * An interface for searching for a moon phase for use in a binary search.
- */
-public interface MoonFinder {
+public class Declination extends MinuntesAndSecondsBase {
+    private int degrees;
 
-    /**
-     * Determines if the desired moon type is earlier or later than the given information.
-     * 
-     * @param angle a moon angle
-     * @param percent a moon visible percentage
-     * @return true if the moon is earlier in time than the supplied information
-     */
-    boolean isMoonBefore(double angle, double percent);
+    public Declination(int degrees, int minutes, int seconds) {
+        this.degrees = degrees;
+        setMinutes(minutes);
+        setSeconds(seconds);
+    }
+
+    public int getDegrees() {
+        return degrees;
+    }
 
 }

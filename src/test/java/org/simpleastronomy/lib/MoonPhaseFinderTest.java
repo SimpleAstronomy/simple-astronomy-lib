@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.bradsbrain.simpleastronomy;
+package org.simpleastronomy.lib;
 
-import static com.bradsbrain.simpleastronomy.BaseUtils.formatDateAsShortDateLocalTime;
+import static org.simpleastronomy.lib.BaseUtils.formatDateAsShortDateLocalTime;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.equalTo;

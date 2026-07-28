@@ -11,18 +11,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.bradsbrain.simpleastronomy;
+package org.simpleastronomy.lib;
 
 /**
- * Provides a first quarter finding calculation for use in a binary search.
+ * Provides a last quarter moon finding calculation for use in a binary search.
  */
-public class FirstQuarterFinder implements MoonFinder {
+public class LastQuarterFinder implements MoonFinder {
 
     private static final double LAST_QUARTER_ANGLE = 270;
 
     private static final double FIRST_QUARTER_ANGLE = 90;
 
     public boolean isMoonBefore(double angle, double unused) {
-        return angle > FIRST_QUARTER_ANGLE && angle <= LAST_QUARTER_ANGLE;
+        return angle <= FIRST_QUARTER_ANGLE || angle > LAST_QUARTER_ANGLE;
     }
 }

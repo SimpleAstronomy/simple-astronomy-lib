@@ -1,4 +1,6 @@
 /*
+ *  Copyright 2011 Brad Parks
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -11,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.bradsbrain.simpleastronomy;
+package org.simpleastronomy.lib;
 
-/**
- * Provides a last quarter moon finding calculation for use in a binary search.
- */
-public class LastQuarterFinder implements MoonFinder {
+import org.junit.jupiter.api.Test;
 
-    private static final double LAST_QUARTER_ANGLE = 270;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.closeTo;
 
-    private static final double FIRST_QUARTER_ANGLE = 90;
+public class BaseUtilsTest {
 
-    public boolean isMoonBefore(double angle, double unused) {
-        return angle <= FIRST_QUARTER_ANGLE || angle > LAST_QUARTER_ANGLE;
+    @Test
+    public void testAdjustTo360Range() {
+        assertThat(BaseUtils.adjustTo360Range(400), closeTo(40, 0.5));
+        assertThat(BaseUtils.adjustTo360Range(-50), closeTo(310, 0.5));
     }
 }

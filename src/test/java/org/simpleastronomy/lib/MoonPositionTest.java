@@ -13,24 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.bradsbrain.simpleastronomy;
+package org.simpleastronomy.lib;
+
+import org.junit.jupiter.api.Test;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
 
-public class JulianDate {
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.closeTo;
 
-    private static final ZonedDateTime DAY_ZERO = ZonedDateTime.of(-4713, 11, 24, 12, 0, 0, 0, ZoneOffset.UTC);
 
-    /**
-     * This method might not be accurate for older dates but works fine for nowadays
-     *
-     * @param cal the input date
-     * @return the julian date
-     */
-    public static Double makeJulianDateUsingMyModified(ZonedDateTime cal) {
-        return (double) ChronoUnit.SECONDS.between(DAY_ZERO, cal) / 24 / 3600;
+public class MoonPositionTest {
+
+    @Test
+    public void testGetTrueLongitude() {
+        ZonedDateTime c = ZonedDateTime.of(1979, 2, 26, 16, 0, 50, 0, ZoneOffset.UTC);
+
+        MoonPosition moonPosition = new MoonPosition(c);
+
+        assertThat(moonPosition.getTrueLongitude(), closeTo(336.967472, 0.025)); // is this close enough?
     }
 
 }
