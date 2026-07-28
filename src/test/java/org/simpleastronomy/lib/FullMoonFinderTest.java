@@ -1,7 +1,7 @@
-package com.bradsbrain.simpleastronomy;
+package org.simpleastronomy.lib;
 
-import static com.bradsbrain.simpleastronomy.BaseUtils.formatDateAsShortDateLocalTime;
-import static com.bradsbrain.simpleastronomy.BaseUtils.formatDateForGMT;
+import static org.simpleastronomy.lib.BaseUtils.formatDateAsShortDateLocalTime;
+import static org.simpleastronomy.lib.BaseUtils.formatDateForGMT;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
