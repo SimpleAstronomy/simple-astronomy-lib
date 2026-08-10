@@ -1,6 +1,9 @@
 plugins {
     id 'java-library'
     id 'jacoco'
+    // https://vanniktech.github.io/gradle-maven-publish-plugin/central/
+    // Use 0.35.0 for Gradle 8 support
+    id 'com.vanniktech.maven.publish' version '0.35.0'
 }
 
 group = 'org.simpleastronomy'
@@ -24,8 +27,6 @@ dependencies {
 }
 
 java {
-    withSourcesJar()
-    withJavadocJar()
 }
 
 test {
@@ -45,3 +46,51 @@ jacocoTestCoverageVerification {
 tasks.check {
     dependsOn(tasks.jacocoTestCoverageVerification)
 }
+
+mavenPublishing {
+    publishToMavenCentral()
+    signAllPublications()
+
+    coordinates(group, 'simple-astronomy-lib', version)
+
+    pom {
+        name = 'simple-astronomy-lib'
+        description = 'A simple and free astronomy library for calculating moon phase.'
+        inceptionYear = '2011'
+        url = 'https://github.com/SimpleAstronomy/simple-astronomy-lib'
+        licenses {
+            license {
+                name = 'Creative Commons Zero v1.0 Universal'
+                url = 'https://creativecommons.org/publicdomain/zero/1.0/legalcode'
+                distribution = 'repo'
+            }
+        }
+        developers {
+            developer {
+                id = 'dustmachine'
+                name = 'Brad Parks'
+                url = 'https://github.com/dustmachine'
+            }
+            developer {
+                id = 'damon140'
+                name = 'Damon van Opdorp '
+                url = 'https://github.com/damon140'
+            }
+        }
+        scm {
+            url = 'https://github.com/SimpleAstronomy/simple-astronomy-lib'
+            connection = 'scm:git:https://github.com/SimpleAstronomy/simple-astronomy-lib.git'
+            developerConnection = 'scm:git:ssh://git@github.com:SimpleAstronomy/simple-astronomy-lib.git'
+        }
+    }
+}
+
+// Workaround to fix this problem:
+// Reason: Task ':generateMetadataFileForMavenPublication' uses this output of
+// task ':plainJavadocJar' without declaring an explicit or implicit dependency.
+// This can lead to incorrect results being produced, depending on what order the
+// tasks are executed.
+tasks.matching { it.name == 'generateMetadataFileForMavenPublication' }.configureEach {
+    dependsOn tasks.matching { it.name == 'plainJavadocJar' }
+}
+
