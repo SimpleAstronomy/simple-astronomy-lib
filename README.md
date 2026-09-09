@@ -3,7 +3,13 @@ A simple and free astronomy library for calculating moon phases.
 
 A simple (and free) astronomy library for calculating moon phase, solar eclipses, etc. This is intended to be used as a library within other projects, thus the list of dependencies will remain as small as possible.
 
-Initial code based on the book [_Practical Astronomy with your Calculator_](http://amzn.to/1FXRxoi) by Peter Duffett-Smith. (If there are errors in the output it is due to my implementation and not because of that text.) The next book I plan to purchase is [_Practical Astronomy with Your Calculator or Spreadsheet_](http://amzn.to/1D7C8up) by the same author.
+Initial code based on the book _Practical Astronomy with your Calculator_ by Peter Duffett-Smith. If there are errors in the output it is due to my implementation and not because of that text.
+- [read here on archive.org](https://archive.org/details/practicalastrono0000duff)
+- [buy here on Amazon](http://amzn.to/1FXRxoi)
+
+The next book I plan to purchase is _Practical Astronomy with Your Calculator or Spreadsheet_ by the same author.
+- [read here on archive.org](https://ia902805.us.archive.org/32/items/ilmetauqeet_gmail_533/533.pdf)
+- [buy here on Amazon](http://amzn.to/1D7C8up)
 
 NOTE: additional collaborators welcome
 
